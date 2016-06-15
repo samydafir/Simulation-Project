@@ -8,6 +8,7 @@ public class PrinterProcess extends SimProcess{
 
 	private PrinterModel printerModel;
 	private boolean printerOccupied = false;
+	private boolean printerInerrupted = false;
 	private ProcessQueue<JobProcess> interruptedJobsQueue;
 	private JobProcess currentProcess;
 
@@ -26,14 +27,24 @@ public class PrinterProcess extends SimProcess{
 			ProcessQueue correspondingQueue = printerModel.getCorrespondingQueue(getName());
 
 			// Falls die WS leer ist, wird das "besetzt"-Flag auf false gestellt und der Process auf passivate().
-			if (correspondingQueue.isEmpty()){
+			if (correspondingQueue.isEmpty() && interruptedJobsQueue.isEmpty()){
 				printerOccupied = false;
 				passivate();
 			}else {
-				// Anderenfalls wird der erste Process aus der WS geholt und in der Variable gespeichert
-				currentProcess = (JobProcess) correspondingQueue.first();
-				// und dann aus der WS geloescht
-				correspondingQueue.remove(currentProcess);
+				// Zuerst ein check auf die unterbrochenen WS da diese Vorrang bei der Bearbeitung haben.
+				if(!interruptedJobsQueue.isEmpty() && printerInerrupted == false){
+					currentProcess = (JobProcess) interruptedJobsQueue.first();
+					interruptedJobsQueue.remove(currentProcess);
+
+				}else{
+					
+					// Anderenfalls wird der erste Process aus der WS geholt und in der Variable gespeichert
+					currentProcess = (JobProcess) correspondingQueue.first();
+					// und dann aus der WS geloescht
+					correspondingQueue.remove(currentProcess);
+				}
+				
+				printerOccupied = true;
 
 				// Festhalten der Startzeit des Abarbeitugsprozesses.
 				// Dies ist noetig, im Falle einer Unterbrechung des Processes durch einen Job hoeherer Prioritaet
@@ -49,18 +60,23 @@ public class PrinterProcess extends SimProcess{
 				// als die eigentliche Abarbeitungszeit des Jobs ist, bedeutet das, dass hier eine Unterbrechung
 				// seitens des Supervisors vorgenommen wurde.
 				if ((endTime - startingTime) < currentProcess.getJobExecutionTime()){
+					// Prozess darf kein zweites mal unterbrochen werden
+					currentProcess.setIsInterruptable(false);
 					// Uebrige Druckzeit des Jobs ermitteln und setzen
 					currentProcess.setJobExecutionTime(endTime - startingTime);
 					// dann diesen Job in die Unterbrochenen-Queue dieses Druckers setzen
 					interruptedJobsQueue.insert(currentProcess);
+					
+					printerInerrupted = true;
+					
 
+				}else{
+					
+					currentProcess.activate();
+					//printerOccupied = false;
+					printerInerrupted = false;
 				}
 
-
-//				TimeOperations.diff()
-
-
-				currentProcess.activateAfter(this);
 			}
 
 		}

@@ -23,8 +23,11 @@ public class Supervisor extends SimProcess {
 
             if (printerProcess.getCurrentProcess() == null)
                 passivate();
-            //
-            else if (printerProcess.getCurrentProcess().getType().getPriority() < jobProcessQueue.last().getType().getPriority())
+            // Falls die Priorität des neuen Prozesses hoeher ist als der derzeit bearbeitete
+            // und der derzeitige unterbrechbar ist, 
+            // aktiviere den Drucker.
+            else if ((printerProcess.getCurrentProcess().getType().getPriority() < jobProcessQueue.first().getType().getPriority())
+            		&& (printerProcess.getCurrentProcess().isInterruptable() == true))
                 printerProcess.activate();
 
             // Warten auf Reaktivierung durch den JobProcess

@@ -23,14 +23,14 @@ public class NewJobProcess extends SimProcess {
 			hold(new TimeSpan(printerModel.getGenTime(jobType)));
 
 			// neuen Job erzeugen
-			JobProcess jobProcess = new JobProcess(printerModel, "Job", true);
+			JobProcess jobProcess = new JobProcess(printerModel, "Job", true, true);
 
 			// Abarbeitungszeit setzen
 			jobProcess.setJobExecutionTime(printerModel.getExecTime(jobType));
 
 			// setzen des Job-Typs
 			jobProcess.setType(jobType);
-
+			jobProcess.setQueueingPriority(jobType.getPriority());
 			// neuer Druckauftrag wurde erstellt
 			// Job unmittelbar nach diesem Generator-Ereignis aktivieren
 			jobProcess.activateAfter(this);

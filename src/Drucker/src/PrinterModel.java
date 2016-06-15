@@ -111,8 +111,8 @@ public class PrinterModel extends Model {
 		newProfiJobProcess.setJobType(JobType.PROFI_JOB);
 
 		NewJobProcess newSystemJobProcess = new NewJobProcess(this, "Initiale SystemJob Erstellung", true);
-		newStudJobProcess.setJobType(JobType.SYSTEM_JOB);
-
+		newSystemJobProcess.setJobType(JobType.SYSTEM_JOB);
+		
 		// Drucker einrichten
 		firstPrinter = new PrinterProcess(this, NameConstants.ERSTER_DRUCKER, true);
 		secondPrinter = new PrinterProcess(this, NameConstants.ZWEITER_DRUCKER, true);
@@ -124,19 +124,21 @@ public class PrinterModel extends Model {
 		supervisorPrinter2 = new Supervisor(this, NameConstants.SUPERVISOR_DRUCKER_2, true);
 		supervisorPrinter2.setPrinterProcess(secondPrinter);
 		supervisorPrinter2.setJobProcessQueue(secondPrinterQueue);
-
+		
 		// Supervisor Prozesse starten
-		supervisorPrinter1.activate();
-		supervisorPrinter2.activate();
+		//supervisorPrinter1.activate();
+		//supervisorPrinter2.activate();
+		
+
 
 		// Drucker Prozesse starten
 		firstPrinter.activate(new TimeSpan(0.0));
 		secondPrinter.activate(new TimeSpan(0.0));
 
 		// Job Prozesse starten
-		newStudJobProcess.activate(new TimeSpan(getGenTime(JobType.STUD_JOB)));
-		newProfiJobProcess.activate(new TimeSpan(getGenTime(JobType.PROFI_JOB)));
-		newSystemJobProcess.activate(new TimeSpan(getGenTime(JobType.SYSTEM_JOB)));
+		newStudJobProcess.activate(new TimeSpan(0.0));
+		newProfiJobProcess.activate(new TimeSpan(0.0));
+		newSystemJobProcess.activate(new TimeSpan(0.0));
 
 	}
 
@@ -162,6 +164,7 @@ public class PrinterModel extends Model {
 		// Warteschlangen fuer Drucker initialisieren
 		firstPrinterQueue = new ProcessQueue<JobProcess>(this, NameConstants.WARTESCHLANGE_DRUCKER_1, true, true);
 		secondPrinterQueue = new ProcessQueue<JobProcess>(this, NameConstants.WARTESCHLANGE_DRUCKER_2, true, true);
+		
 
 		// Warteschlange fuer freie Drucker initialisieren
 //		freePrinterQueue = new ProcessQueue<PrinterProcess>(this, "Warteschlange fuer freie Drucker", true, true);

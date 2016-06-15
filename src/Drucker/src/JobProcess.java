@@ -1,7 +1,6 @@
 package Drucker.src;
 
 import co.paralleluniverse.fibers.SuspendExecution;
-import com.sun.org.apache.bcel.internal.generic.IF_ACMPEQ;
 import desmoj.core.simulator.*;
 
 public class JobProcess extends SimProcess {
@@ -9,10 +8,11 @@ public class JobProcess extends SimProcess {
     private PrinterModel printerModel;
     private double jobExecutionTime;
     private JobType type;
+    private boolean isInterruptable;
 
-    public JobProcess(Model owner, String name, boolean showInTrace) {
+    public JobProcess(Model owner, String name, boolean showInTrace, boolean isInterruptable) {
         super(owner, name, showInTrace);
-
+        this.isInterruptable = isInterruptable;
         printerModel = (PrinterModel) owner;
     }
 
@@ -72,4 +72,14 @@ public class JobProcess extends SimProcess {
     public void setType(JobType type) {
         this.type = type;
     }
+
+	public boolean isInterruptable() {
+		return isInterruptable;
+	}
+
+	public void setIsInterruptable(boolean isInterruptable) {
+		this.isInterruptable = isInterruptable;
+	}
+    
+    
 }
