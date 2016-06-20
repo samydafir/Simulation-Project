@@ -185,11 +185,12 @@ public class PrinterModel extends Model {
 
 		for (JobProcess jp2 : secondPrinterQueue)
 			secondQueueExecTime += jp2.getJobExecutionTime();
-
-		if (firstQueueExecTime <= secondQueueExecTime)
+		
+		if (firstQueueExecTime <= secondQueueExecTime){
 			return firstPrinterQueue;
-
+		}
 		return secondPrinterQueue;
+		
 	}
 
 	public PrinterProcess getSecondPrinter() {

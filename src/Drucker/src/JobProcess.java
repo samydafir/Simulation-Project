@@ -19,13 +19,21 @@ public class JobProcess extends SimProcess {
     @Override
     public void lifeCycle() throws SuspendExecution {
 
+    	ProcessQueue smallestJobQueue = printerModel.getSmallestJobQueue();
+    	boolean isInFirstQueue;
+    	
+    	if(!printerModel.getFirstPrinter().isPrinterOccupied()){
+    		printerModel.firstPrinterQueue.insert(this);
+    		isInFirstQueue = true;
+        } else if(!printerModel.getSecondPrinter().isPrinterOccupied()){
+        	printerModel.secondPrinterQueue.insert(this);
+        	isInFirstQueue = false;
+        } else{
         // Einreihen des Jobs in die kleinste Drucker-Warteschlange
-        ProcessQueue smallestJobQueue = printerModel.getSmallestJobQueue();
-        smallestJobQueue.insert(this);
-
-        // Hier wird herausgefunden in welcher Warteschlange sich der Job eingereiht hat.
-        boolean isInFirstQueue = smallestJobQueue.getName().equals(NameConstants.WARTESCHLANGE_DRUCKER_1);
-
+        	smallestJobQueue.insert(this);
+        	isInFirstQueue = smallestJobQueue.getName().equals(NameConstants.WARTESCHLANGE_DRUCKER_1);
+        }
+        
         // Falls er sich in die erste eingereiht hat
         if (isInFirstQueue) {
             // Und falls der Drucker momentan beschaeftigt ist

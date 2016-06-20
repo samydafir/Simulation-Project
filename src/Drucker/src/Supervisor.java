@@ -20,6 +20,10 @@ public class Supervisor extends SimProcess {
     public void lifeCycle() throws SuspendExecution {
 
         while (true) {
+        	int p1 = printerProcess.getCurrentProcess().getType().getPriority();
+            int p2 = jobProcessQueue.first().getType().getPriority();
+            boolean b = printerProcess.getCurrentProcess().isInterruptable() == true;
+        	
 
             if (printerProcess.getCurrentProcess() == null)
                 passivate();
