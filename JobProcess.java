@@ -24,22 +24,14 @@ public class JobProcess extends SimProcess {
     	
     	if(!printerModel.getFirstPrinter().isPrinterOccupied()){
     		printerModel.firstPrinterQueue.insert(this);
-            System.out.println("\nPrinter not occupied");
-            System.out.println("inserting (" + getName() + " / " + type.name() + ") into " + printerModel.firstPrinterQueue.getName()
-                    + "\n");
             isInFirstQueue = true;
         } else if(!printerModel.getSecondPrinter().isPrinterOccupied()){
             printerModel.secondPrinterQueue.insert(this);
-            System.out.println("\nPrinter not occupied");
-            System.out.println("inserting (" + getName() + " / " + type.name() + ") into " + printerModel.secondPrinterQueue.getName()
-                    + " \n");
             isInFirstQueue = false;
         } else{
         // Einreihen des Jobs in die kleinste Drucker-Warteschlange
         	smallestJobQueue.insert(this);
         	isInFirstQueue = smallestJobQueue.getName().equals(NameConstants.WARTESCHLANGE_DRUCKER_1);
-            System.out.println("\nPrinter Occupied");
-            System.out.println("inserting (" + getName() + " / " + type.name() + ") into " + smallestJobQueue.getName()+ "\n");
         }
         
         // Falls er sich in die erste eingereiht hat
@@ -48,12 +40,10 @@ public class JobProcess extends SimProcess {
             if (printerModel.getFirstPrinter().isPrinterOccupied()) {
                 // wird der Supervisor dieses Druckers aktiviert (er uebernimmt alle weiteren Schritte)
                 printerModel.getSupervisorPrinter1().activate();
-                System.out.println(getName() + " aktiviert " + printerModel.getSupervisorPrinter1().getName());
             }else {
                 // Anderenfalls wird der Drucker aktiviert. Dieser kuemmert sich darum, sich den Job aus
                 // der WS zu holen
                 PrinterProcess firstPrinter = printerModel.getFirstPrinter();
-                System.out.println(getName() + " aktiviert " + firstPrinter.getName());
                 firstPrinter.setPrinterOccupied(true);
                 firstPrinter.activate();
             }
@@ -64,18 +54,13 @@ public class JobProcess extends SimProcess {
 
             if (printerModel.getSecondPrinter().isPrinterOccupied()) {
                 printerModel.getSupervisorPrinter2().activate();
-                System.out.println(getName() + " aktiviert " + printerModel.getSupervisorPrinter2().getName());
             }
             else {
                 PrinterProcess secondPrinter = printerModel.getSecondPrinter();
-                System.out.println(getName() + " aktiviert " + secondPrinter.getName());
                 secondPrinter.setPrinterOccupied(true);
                 secondPrinter.activate();
             }
         }
-
-        System.out.println("QueueLange Drucker 1: " + printerModel.firstPrinterQueue.length());
-        System.out.println("QueueLange Drucker 2: " + printerModel.secondPrinterQueue.length());
 
         // Warten in der WS oder auf die Abarbeitung durch den Drucker.
         passivate();

@@ -37,11 +37,8 @@ public class PrinterProcess extends SimProcess{
 				if(!interruptedJobsQueue.isEmpty() && printerInterrupted == false){
 					currentProcess = (JobProcess) interruptedJobsQueue.first();
 					interruptedJobsQueue.remove(currentProcess);
-					System.out.println(getName() + ": Unterbrochenen Job weiter machen:" + currentProcess.getName());
 
 				}else{
-					System.out.println("_______________");
-					System.out.println(getName() + ": Hole job " + correspondingQueue.first().getName() + " aus " + correspondingQueue.getName());
 					// Anderenfalls wird der erste Process aus der WS geholt und in der Variable gespeichert
 					currentProcess = (JobProcess) correspondingQueue.first();
 					// und dann aus der WS geloescht
@@ -70,7 +67,6 @@ public class PrinterProcess extends SimProcess{
 
 				// && b != 0
 				if (diff < execTime){
-					System.out.println(getName() + ": " +currentProcess.getName() + " unterbrochen durch " + correspondingQueue.first().getName());
 
 					// Prozess darf kein zweites mal unterbrochen werden
 					currentProcess.setIsInterruptable(false);
@@ -88,7 +84,6 @@ public class PrinterProcess extends SimProcess{
 					currentProcess.activate();
 					//printerOccupied = false;
 					printerInterrupted = false;
-					System.out.println(getName() + ": finished " + currentProcess.getName());
 				}
 
 			}

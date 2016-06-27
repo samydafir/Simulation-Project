@@ -20,22 +20,21 @@ public class Supervisor extends SimProcess {
     public void lifeCycle() throws SuspendExecution {
 
         while (true) {
-        	int p1 = printerProcess.getCurrentProcess().getType().getPriority();
-            int p2 = jobProcessQueue.first().getType().getPriority();
-            boolean b = printerProcess.getCurrentProcess().isInterruptable() == true;
+
+            JobProcess currentProcess = printerProcess.getCurrentProcess();
+            JobProcess newJobProcess = jobProcessQueue.first();
+        	int process1 = currentProcess.getType().getPriority();
+            int process2 = newJobProcess.getType().getPriority();
+            boolean processHasHigherPriority = process1 < process2;
+            boolean isProcessInterruptible = printerProcess.getCurrentProcess().isInterruptable() == true;
 
             if (printerProcess.getCurrentProcess() == null)
                 passivate();
             // Falls die Priorität des neuen Prozesses hoeher ist als der derzeit bearbeitete
             // und der derzeitige unterbrechbar ist, 
             // aktiviere den Drucker.
-            else if ((printerProcess.getCurrentProcess().getType().getPriority() < jobProcessQueue.first().getType().getPriority())
-            		&& b){
-                System.out.println(this.getName() + " aktiviert " + printerProcess.getName() + "\n"
-                        + "ausgeloest durch " + jobProcessQueue.first().getName());
-
+            else if (processHasHigherPriority && isProcessInterruptible){
                 printerProcess.reActivate(new TimeSpan(0.0));
-//                printerProcess.activate();
             }
 
             // Warten auf Reaktivierung durch den JobProcess
