@@ -1,4 +1,4 @@
-package Drucker.src;
+package Drucker;
 
 import co.paralleluniverse.fibers.SuspendExecution;
 import desmoj.core.simulator.*;

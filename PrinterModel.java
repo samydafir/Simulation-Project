@@ -1,4 +1,4 @@
-package Drucker.src;
+package Drucker;
 
 import desmoj.core.dist.ContDistUniform;
 import desmoj.core.simulator.*;

@@ -1,4 +1,4 @@
-package Drucker.src;
+package Drucker;
 
 /**
  *

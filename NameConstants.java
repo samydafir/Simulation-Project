@@ -1,4 +1,4 @@
-package Drucker.src;
+package Drucker;
 
 /**
  * Created by laurentiu on 12.06.2016.

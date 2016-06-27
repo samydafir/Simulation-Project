@@ -1,4 +1,4 @@
-package Drucker.src;
+package Drucker;
 
 import co.paralleluniverse.fibers.SuspendExecution;
 import desmoj.core.simulator.*;
@@ -33,20 +33,20 @@ public class PrinterProcess extends SimProcess{
 				printerOccupied = false;
 				passivate();
 			}else {
-				// Zuerst ein check auf die unterbrochenen WS da diese Vorrang bei der Bearbeitung haben.
+				// Zuerst ein check auf die unterbrochenen WS da diese Vorrang bei der Bearbeitung hat.
 				if(!interruptedJobsQueue.isEmpty() && printerInterrupted == false){
 					currentProcess = (JobProcess) interruptedJobsQueue.first();
 					interruptedJobsQueue.remove(currentProcess);
-
+					System.out.println(getName() + ": Unterbrochenen Job weiter machen:" + currentProcess.getName());
 
 				}else{
-					System.out.println(getName());
-					System.out.println(correspondingQueue.length());
 					System.out.println("_______________");
+					System.out.println(getName() + ": Hole job " + correspondingQueue.first().getName() + " aus " + correspondingQueue.getName());
 					// Anderenfalls wird der erste Process aus der WS geholt und in der Variable gespeichert
 					currentProcess = (JobProcess) correspondingQueue.first();
 					// und dann aus der WS geloescht
 					correspondingQueue.remove(currentProcess);
+
 				}
 				
 				printerOccupied = true;
@@ -65,10 +65,13 @@ public class PrinterProcess extends SimProcess{
 				// Falls die Differenz zwischen Start- und Endzeit der Abarbeitung kleiner ist als
 				// als die eigentliche Abarbeitungszeit des Jobs ist, bedeutet das, dass hier eine Unterbrechung
 				// seitens des Supervisors vorgenommen wurde.
-				double a = currentProcess.getJobExecutionTime();
-				double b = endTime - startingTime;
+				double diff = Double.valueOf(String.valueOf(endTime - startingTime).substring(0, 7));
 				double execTime = Double.valueOf(String.valueOf(currentProcess.getJobExecutionTime()).substring(0, 7));
-				if ((endTime - startingTime) < execTime){
+
+				// && b != 0
+				if (diff < execTime){
+					System.out.println(getName() + ": " +currentProcess.getName() + " unterbrochen durch " + correspondingQueue.first().getName());
+
 					// Prozess darf kein zweites mal unterbrochen werden
 					currentProcess.setIsInterruptable(false);
 					// Uebrige Druckzeit des Jobs ermitteln und setzen
@@ -77,12 +80,15 @@ public class PrinterProcess extends SimProcess{
 					interruptedJobsQueue.insert(currentProcess);
 					
 					printerInterrupted = true;
-					
+//					currentProcess.activate();
+
 
 				}else{
+
 					currentProcess.activate();
 					//printerOccupied = false;
 					printerInterrupted = false;
+					System.out.println(getName() + ": finished " + currentProcess.getName());
 				}
 
 			}

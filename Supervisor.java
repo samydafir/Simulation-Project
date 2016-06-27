@@ -1,4 +1,4 @@
-package Drucker.src;
+package Drucker;
 
 import co.paralleluniverse.fibers.SuspendExecution;
 import desmoj.core.simulator.*;
@@ -23,7 +23,6 @@ public class Supervisor extends SimProcess {
         	int p1 = printerProcess.getCurrentProcess().getType().getPriority();
             int p2 = jobProcessQueue.first().getType().getPriority();
             boolean b = printerProcess.getCurrentProcess().isInterruptable() == true;
-        	
 
             if (printerProcess.getCurrentProcess() == null)
                 passivate();
@@ -31,8 +30,13 @@ public class Supervisor extends SimProcess {
             // und der derzeitige unterbrechbar ist, 
             // aktiviere den Drucker.
             else if ((printerProcess.getCurrentProcess().getType().getPriority() < jobProcessQueue.first().getType().getPriority())
-            		&& (printerProcess.getCurrentProcess().isInterruptable() == true))
-                printerProcess.activate();
+            		&& b){
+                System.out.println(this.getName() + " aktiviert " + printerProcess.getName() + "\n"
+                        + "ausgeloest durch " + jobProcessQueue.first().getName());
+
+                printerProcess.reActivate(new TimeSpan(0.0));
+//                printerProcess.activate();
+            }
 
             // Warten auf Reaktivierung durch den JobProcess
             passivate();
