@@ -8,6 +8,7 @@ public class PrinterModel extends Model {
 	private ContDistUniform studJobGenTime;
 	private ContDistUniform profJobGenTime;
 	private ContDistUniform sysJobGenTime;
+	private ContDistUniform inkEmptyGenTime;
 
 	private ContDistUniform studJobExecTime;
 	private ContDistUniform profJobExecTime;
@@ -50,7 +51,7 @@ public class PrinterModel extends Model {
 
 		// Ende der Simulation setzen
 		// -> hier 4 Stunden (= 240 min)
-		printerExperiment.stop(new TimeInstant(240));
+		printerExperiment.stop(new TimeInstant(600));
 
 		// Experiment zur Zeit 0.0 starten
 		printerExperiment.start();
@@ -124,12 +125,6 @@ public class PrinterModel extends Model {
 		supervisorPrinter2 = new Supervisor(this, NameConstants.SUPERVISOR_DRUCKER_2, true);
 		supervisorPrinter2.setPrinterProcess(secondPrinter);
 		supervisorPrinter2.setJobProcessQueue(secondPrinterQueue);
-		
-		// Supervisor Prozesse starten
-		//supervisorPrinter1.activate();
-		//supervisorPrinter2.activate();
-		
-
 
 		// Drucker Prozesse starten
 		firstPrinter.activate(new TimeSpan(0.0));
@@ -139,6 +134,15 @@ public class PrinterModel extends Model {
 		newStudJobProcess.activate(new TimeSpan(0.0));
 		newProfiJobProcess.activate(new TimeSpan(0.0));
 		newSystemJobProcess.activate(new TimeSpan(0.0));
+
+		// InkEmpty Prozess initialisieren und starten
+		PrinterInkEmptyProcess printerInkEmptyProcess = new PrinterInkEmptyProcess(this,
+				"Initiale InkEmptyProcess Erstellung", true, 100);
+		printerInkEmptyProcess.activate(new TimeSpan(100));
+
+		PrinterInkEmptyProcess printerInkEmptyProcess2 = new PrinterInkEmptyProcess(this,
+				"Initiale InkEmptyProcess Erstellung", true, 100);
+		printerInkEmptyProcess2.activate(new TimeSpan(300));
 
 	}
 
@@ -213,5 +217,17 @@ public class PrinterModel extends Model {
 		if (name.equals(NameConstants.ERSTER_DRUCKER))
 			return firstPrinterQueue;
 		return secondPrinterQueue;
+	}
+
+	public ProcessQueue getOtherPrinterQueue(String name){
+		if (name.equals(NameConstants.ERSTER_DRUCKER))
+			return secondPrinterQueue;
+		return firstPrinterQueue;
+	}
+
+	public PrinterProcess getOtherPrinterProcess(String name){
+		if (name.equals(NameConstants.ERSTER_DRUCKER))
+			return secondPrinter;
+		return firstPrinter;
 	}
 }

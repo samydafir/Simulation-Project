@@ -10,6 +10,8 @@ public class PrinterProcess extends SimProcess{
 	private boolean printerInterrupted = false;
 	private ProcessQueue<JobProcess> interruptedJobsQueue;
 	private JobProcess currentProcess;
+	private boolean isInMaintainance = false;
+	private PrinterInkEmptyProcess inkEmptyProcess;
 
 	public PrinterProcess(Model owner, String name, boolean showInTrace) {
 		super(owner, name, showInTrace);
@@ -23,6 +25,12 @@ public class PrinterProcess extends SimProcess{
 		String name;
 		
 		while (true){
+			// Falls der Drucker in Wartung ist (z.B. Toner Wechsel), wird die Zeit der Wartung abgehalten.
+			if (isInMaintainance){
+				hold(new TimeSpan(inkEmptyProcess.getExecutionTime()));
+				isInMaintainance = false;
+			}
+
 			name = getName().substring(0, getName().length()-2);
 			
 			// Holen der Warteschlange welche zu diesem Drucker gehoert
@@ -51,7 +59,6 @@ public class PrinterProcess extends SimProcess{
 				// Festhalten der Startzeit des Abarbeitugsprozesses.
 				// Dies ist noetig, im Falle einer Unterbrechung des Processes durch einen Job hoeherer Prioritaet
 				double startingTime = printerModel.getExperiment().getSimClock().getTime().getTimeAsDouble();
-				TimeInstant t1 = printerModel.getExperiment().getSimClock().getTime();
 
 				// Job wird abgearbeitet -> Drucker wird solange inaktiv gestellt
 				hold(new TimeSpan(currentProcess.getJobExecutionTime()));
@@ -62,10 +69,39 @@ public class PrinterProcess extends SimProcess{
 				// Falls die Differenz zwischen Start- und Endzeit der Abarbeitung kleiner ist als
 				// als die eigentliche Abarbeitungszeit des Jobs ist, bedeutet das, dass hier eine Unterbrechung
 				// seitens des Supervisors vorgenommen wurde.
-				double diff = Double.valueOf(String.valueOf(endTime - startingTime).substring(0, 7));
+				double diff = Double.valueOf(String.valueOf(endTime - startingTime).substring(0, 7)) + 0.0001;
 				double execTime = Double.valueOf(String.valueOf(currentProcess.getJobExecutionTime()).substring(0, 7));
 
-				// && b != 0
+				if (isInMaintainance){
+
+					JobProcess jp = new JobProcess(printerModel, currentProcess.getName(), true, true);
+					jp.setJobExecutionTime(printerModel.getExecTime(currentProcess.getType()));
+					jp.setType(currentProcess.getType());
+					jp.setQueueingPriority(currentProcess.getType().getPriority());
+					jp.activate();
+
+
+					ProcessQueue<JobProcess> otherPrinterQueue = printerModel.getOtherPrinterQueue(name);
+					ProcessQueue<JobProcess> otherInterruptedJobsQueue = printerModel.getOtherPrinterProcess(name).getInterruptedJobsQueue();
+
+					for (Object process : correspondingQueue){
+						otherPrinterQueue.insert((JobProcess) process);
+						correspondingQueue.remove((JobProcess) process);
+					}
+
+					for (Object process : interruptedJobsQueue){
+						otherInterruptedJobsQueue.insert((JobProcess) process);
+						interruptedJobsQueue.remove((JobProcess) process);
+					}
+
+					printerOccupied = false;
+					printerInterrupted = false;
+
+					currentProcess = null;
+
+					continue;
+				}
+
 				if (diff < execTime){
 
 					// Prozess darf kein zweites mal unterbrochen werden
@@ -76,13 +112,9 @@ public class PrinterProcess extends SimProcess{
 					interruptedJobsQueue.insert(currentProcess);
 					
 					printerInterrupted = true;
-//					currentProcess.activate();
-
 
 				}else{
-
 					currentProcess.activate();
-					//printerOccupied = false;
 					printerInterrupted = false;
 				}
 
@@ -111,5 +143,22 @@ public class PrinterProcess extends SimProcess{
 	public void setCurrentProcess(JobProcess currentProcess) {
 		this.currentProcess = currentProcess;
 	}
+
+	public PrinterInkEmptyProcess getInkEmptyProcess() {
+		return inkEmptyProcess;
+	}
+
+	public void setInkEmptyProcess(PrinterInkEmptyProcess inkEmptyProcess) {
+		this.inkEmptyProcess = inkEmptyProcess;
+	}
+
+	public boolean isInMaintainance() {
+		return isInMaintainance;
+	}
+
+	public void setIsInMaintainance(boolean isInMaintainance) {
+		this.isInMaintainance = isInMaintainance;
+	}
+
 
 }

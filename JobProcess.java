@@ -20,27 +20,41 @@ public class JobProcess extends SimProcess {
     public void lifeCycle() throws SuspendExecution {
 
         ProcessQueue smallestJobQueue = printerModel.getSmallestJobQueue();
-    	boolean isInFirstQueue;
-    	
-    	if(!printerModel.getFirstPrinter().isPrinterOccupied()){
-    		printerModel.firstPrinterQueue.insert(this);
-            isInFirstQueue = true;
-        } else if(!printerModel.getSecondPrinter().isPrinterOccupied()){
+        boolean isInFirstQueue;
+
+        boolean firstPrinterInMaintainance = printerModel.getFirstPrinter().isInMaintainance();
+        boolean secondPrinterInMaintainance = printerModel.getSecondPrinter().isInMaintainance();
+
+        if (firstPrinterInMaintainance){
             printerModel.secondPrinterQueue.insert(this);
             isInFirstQueue = false;
-        } else{
-        // Einreihen des Jobs in die kleinste Drucker-Warteschlange
-        	smallestJobQueue.insert(this);
-        	isInFirstQueue = smallestJobQueue.getName().equals(NameConstants.WARTESCHLANGE_DRUCKER_1);
+        } else if (secondPrinterInMaintainance){
+            printerModel.firstPrinterQueue.insert(this);
+            isInFirstQueue = true;
+        }else {
+
+            if (!printerModel.getFirstPrinter().isPrinterOccupied()) {
+                printerModel.firstPrinterQueue.insert(this);
+                isInFirstQueue = true;
+            } else if (!printerModel.getSecondPrinter().isPrinterOccupied()) {
+                printerModel.secondPrinterQueue.insert(this);
+                isInFirstQueue = false;
+            } else {
+                // Einreihen des Jobs in die kleinste Drucker-Warteschlange
+                smallestJobQueue.insert(this);
+                isInFirstQueue = smallestJobQueue.getName().equals(NameConstants.WARTESCHLANGE_DRUCKER_1);
+            }
         }
-        
+
+
+
         // Falls er sich in die erste eingereiht hat
         if (isInFirstQueue) {
             // Und falls der Drucker momentan beschaeftigt ist
             if (printerModel.getFirstPrinter().isPrinterOccupied()) {
                 // wird der Supervisor dieses Druckers aktiviert (er uebernimmt alle weiteren Schritte)
                 printerModel.getSupervisorPrinter1().activate();
-            }else {
+            } else {
                 // Anderenfalls wird der Drucker aktiviert. Dieser kuemmert sich darum, sich den Job aus
                 // der WS zu holen
                 PrinterProcess firstPrinter = printerModel.getFirstPrinter();
@@ -54,8 +68,7 @@ public class JobProcess extends SimProcess {
 
             if (printerModel.getSecondPrinter().isPrinterOccupied()) {
                 printerModel.getSupervisorPrinter2().activate();
-            }
-            else {
+            } else {
                 PrinterProcess secondPrinter = printerModel.getSecondPrinter();
                 secondPrinter.setPrinterOccupied(true);
                 secondPrinter.activate();
@@ -82,13 +95,13 @@ public class JobProcess extends SimProcess {
         this.type = type;
     }
 
-	public boolean isInterruptable() {
-		return isInterruptable;
-	}
+    public boolean isInterruptable() {
+        return isInterruptable;
+    }
 
-	public void setIsInterruptable(boolean isInterruptable) {
-		this.isInterruptable = isInterruptable;
-	}
-    
-    
+    public void setIsInterruptable(boolean isInterruptable) {
+        this.isInterruptable = isInterruptable;
+    }
+
+
 }

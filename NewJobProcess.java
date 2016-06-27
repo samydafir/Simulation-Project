@@ -46,4 +46,6 @@ public class NewJobProcess extends SimProcess {
 	public void setJobType(JobType jobType) {
 		this.jobType = jobType;
 	}
+
+
 }
