@@ -22,9 +22,13 @@
 	anderen. Unterbrochene Jobs werden so bald als möglich wieder fortgesetzt.
 	
 	\section{Modell}
-	Um den Sachverhalt aus der Aufgabenstellung simulieren zu können wurde ein Modell bestehend aus 6 Prozessen und einer Model-Klasse erstellt (+ 1 weiterer Prozess für die Erweiterung).
+	Um den Sachverhalt aus der Aufgabenstellung simulieren zu können wurde ein Modell bestehend aus 4 Prozessen und einer Model-Klasse erstellt (+ 1 weiterer Prozess für die Erweiterung).
 	Im folgenden wird kurz auf die Aufgabe eines jeden Prozesses eingegangen und am Schluss das Zusammenspiel der einzelnen Prozesse erklärt. Außerden gehen wir noch kurz auf die Veränderungen
 	ein, die nötig waren, um unsere Erweiterung zu realisieren.
+	
+	\subsection{Allgemein}
+	Das Modell wurde so definiert, dass 2 Drucker existieren, von denen jeder seine eigene Drucker-Queue verwaltet. Jeder Neue Druckauftrag wird also bei der Erstellung einem Drucker zugeordnet
+	und dann von diesem abgearbeitet. Weiters verwaltet auch jeder Drucker seine eigene Interrupted-Queue für unterbrochene Aufträge.
 	
 	\subsection{NewJobProcess}
 	Wie in der Aufgabenstellung beschrieben, erhalten unsere beiden Drucker in gewissen Zeitabständen Druckaufträge unterschiedlicher Priorität. Diese werden vermutlich von Usern oder den System
@@ -34,7 +38,19 @@
 	3 Instanzen dieser Klasse.
 	
 	\subsection{JobProcess}
-		
+	Der $JobProcess$ wird wie bereits beschrieben von $NewJobProcess$ erstellt und sofort aktiviert. Dieser Prozess repräsentiert einen Druckauftrag. Das Verhalten wurde so definiert, dass jedes
+	$JobProcess$-Objekt selbst entscheidet, in welche Queue er sich einordnet. Jeder Job analysiert nachdem er aktiviert wurde beide Drucker-Queues und ordnet sich in jene mit der geringsten
+	Gesamtbearbeitungszeit ein. Hier werden 2 Situationen unterschieden. Ist ein Drucker nicht beschäftigt, reiht sich der Job sofort in dessen Queue ein, setzt diesen auf $besetzt$ und aktiviert ihn, sind 
+	jedoch beide Drucker besetzt, berechnet der Job beide Gesamtbearbeitungszeiten und reiht sich beim Drucker mit dem kleineren Wert ein. In der Erweiterung wird zusätzlich noch überprüft, ob sich ein Drucker im			Wartungsmodus befindet. Ist dies der Fall, reiht sich der Job beim anderen Drucker ein.
+	
+	\subsection{PrinterProcess}
+	
+	\subsection{Supervisor}
+	Der Supervisor steuert die Unterbrechung von Prozessen, die gerade bearbeitet werden. eine Instanz dieser Klasse überwacht jeweils einen Drucker und wird immer dann aktiviert, wenn sich ein 
+	neuer $JobProcess$ in eine Queue einordnet. Der Supervisor vergleicht immer die Priorität des aktuellen Jobs im Drucker mit der des neu eingefügten Job. Ist die Priorität des neuen Job höher, aktiviert
+	der $Supervisor$ den jeweiligen Drucker (der während der Abarbeitung eines Auftrags auf hold gesetzt ist). Der restliche Unterbrechungsvorgang mitsamt des Verschiebens des aktuellen Jobs in die
+	Interrupted-Queue wird vom (dann wieder aktiven) Drucker übernommen.
+	
 	
 	\section{Ergebnisse}
 	
