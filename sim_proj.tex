@@ -1,0 +1,50 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage[ngerman]{babel}
+\usepackage{inputenc}
+
+\title{Farbdrucker Scheduling}
+\author{Dominik Baumgartner, Thomas Samy Dafir, Laurentiu Vlad}
+\date{}
+
+\begin{document}
+	\maketitle
+	
+	\section{Aufgabenstellung}
+	Es soll ein Szenario simuliert werden, bei dem 2 Farbdrucker mehreren Usern zur Verfügung stehen und in gewissen Zeitabständen Print-Jobs mit
+	verschiedenen Prioritäten und Abarbeitungszeiten erstellt werden. Insgesamt gibt es 3 Prioritätslevels: Student (niedrig), Professor (mittel), System (hoch). Jobs 
+	werden in Queues gesammelt und von beiden Druckern abgearbeitet. Dabei ist es immer möglich, dass jobs mit niedrigerer Priorität während ihrer Bearbeitung in 
+	einem Drucker von Jobs höherer Priuorität unterbrochen werden können, sprich Professoren-Jobs unterbrechen Studenten-Jobs, System-jobs unterbrechen alle 
+	anderen. Unterbrochene Jobs werden so bald als möglich wieder fortgesetzt.
+	
+	\section{Modell}
+	Um den Sachverhalt aus der Aufgabenstellung simulieren zu können wurde ein Modell bestehend aus 6 Prozessen und einer Model-Klasse erstellt (+ 1 weiterer Prozess für die Erweiterung).
+	Im folgenden wird kurz auf die Aufgabe eines jeden Prozesses eingegangen und am Schluss das Zusammenspiel der einzelnen Prozesse erklärt. Außerden gehen wir noch kurz auf die Veränderungen
+	ein, die nötig waren, um unsere Erweiterung zu realisieren.
+	
+	\subsection{NewJobProcess}
+	Wie in der Aufgabenstellung beschrieben, erhalten unsere beiden Drucker in gewissen Zeitabständen Druckaufträge unterschiedlicher Priorität. Diese werden vermutlich von Usern oder den System
+	in auftrag gegeben. Um dies zu simulieren brauchen wir natürlich eine Art ``Job-Generator''. Diese Aufgabe wird vom $NewJobProcess$ übernommen. NewJobProcess läuft während der gesamten 
+	Simulationsdauer und erstellt in gewissen Zeitabständen neue Jobs mit einer bestimmten Ausführungsdauer. Danach wird für eine gewisse Zeit gewartet und danach wieder ein Job erstellt. Die Warte-
+	und Ausführungszeiten werden von einem $ContDistUniform$-Objekt im Modell bezogen. Ein erstellter Prozess wird sofort aktiviert. Da wir 3 verschiene Arten von Jobs simulieren, benötigen wir auch
+	3 Instanzen dieser Klasse.
+	
+	\subsection{JobProcess}
+		
+	
+	\section{Ergebnisse}
+	
+	
+
+
+
+
+
+
+
+
+\end{document}
