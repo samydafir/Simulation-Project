@@ -3,6 +3,16 @@ package Drucker;
 import co.paralleluniverse.fibers.SuspendExecution;
 import desmoj.core.simulator.*;
 
+/**
+ * Jeder PrinterProcess repräsentiert einen Drucker. Dieser läuft während der gesamten Simulationsdauer.
+ * Der PrinterProcess hat die Aufgabe, den Prozess mit der jeweils höchsten Priorität aus der Queue zu holen und zu bearbeiten.
+ * Dabei kann der jeweilige Bearbeitungsvorgang von einem neu eintreffenden Prozess höherer Priorität unterborchen werden.
+ * Auch Wartungsereignisse werden hier berücksichtigt. Tritt eine Wartungsereignis ein, wird der jeweilige Drucker auf hold
+ * gesetzt, bis die Wartung beendet ist. 
+ * @author Laurentiu Vlad
+ * @author Thomas Samy Dafir
+ * @author Dominik, Baumgartner
+ */
 public class PrinterProcess extends SimProcess{
 
 	private PrinterModel printerModel;
@@ -19,7 +29,14 @@ public class PrinterProcess extends SimProcess{
 		printerModel = (PrinterModel) owner;
 		interruptedJobsQueue = new ProcessQueue<JobProcess>(owner, "Unterbrochene Jobs - " + getName(), true, true);
 	}
-
+	
+	/**
+	 * Wird sofort bei Beginn der Simulation vom Model aus gestartet. Verwaltet Abarbeitung, Unterbrehung und Wartung. Wird ein Job
+	 * bearbeitet, wird der PrinterProcess auf hold gesetzt, bis dieser Job abgearbeitet ist. Kommt es jedoch zu einer Unterbrechung,
+	 * wird dies aufgrund der noch nicht abgelaufenen Bearbeitungszeit des Jobs festgestellt und der job wird mit der Restzeit in die 
+	 * Unterbrochenen-Queue verschoben. Danach wird der Job höchster Priorität aus der Prozess-Queue geholt und bearbeitet.
+	 * Kommt es zur Wartung, werden alle Jobs in die Queue des anderen Druckers verschoben und der Drucker selbst aud hold gesetzt.
+	 */
 	@Override
 	public void lifeCycle() throws SuspendExecution {
 		String name;
@@ -34,7 +51,7 @@ public class PrinterProcess extends SimProcess{
 			name = getName().substring(0, getName().length()-2);
 			
 			// Holen der Warteschlange welche zu diesem Drucker gehoert
-			ProcessQueue correspondingQueue = printerModel.getCorrespondingQueue(name);
+			ProcessQueue<JobProcess> correspondingQueue = printerModel.getCorrespondingQueue(name);
 
 			// Falls die WS leer ist, wird das "besetzt"-Flag auf false gestellt und der Process auf passivate().
 			if (correspondingQueue.isEmpty() && interruptedJobsQueue.isEmpty()){

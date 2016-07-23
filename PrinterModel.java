@@ -3,12 +3,19 @@ package Drucker;
 import desmoj.core.dist.ContDistUniform;
 import desmoj.core.simulator.*;
 
+/**
+ * Das PrinterModel enthält alle Komponenten, die für die Simulation des Farbdrucker-Setup notwendig sind.
+ * Hier werden unter anderem Queues, Drucker, Vereilungsfunktionen für Ankunfts- und Bearbeitungszeiten, sowie
+ * Supervisor und Job-Generatoren definiert und mit den zugehörigen Werten initialisiert.
+ * @author Laurentiu Vlad
+ * @author Thomas Samy Dafir
+ * @author Dominik, Baumgartner
+ */
 public class PrinterModel extends Model {
 
 	private ContDistUniform studJobGenTime;
 	private ContDistUniform profJobGenTime;
 	private ContDistUniform sysJobGenTime;
-	private ContDistUniform inkEmptyGenTime;
 
 	private ContDistUniform studJobExecTime;
 	private ContDistUniform profJobExecTime;
@@ -23,16 +30,17 @@ public class PrinterModel extends Model {
 
 	protected Supervisor supervisorPrinter1;
 	protected Supervisor supervisorPrinter2;
-
-
-	// Warteschlange fuer Printer
-//	protected ProcessQueue<PrinterProcess> freePrinterQueue;
-
+	
 
 	public PrinterModel(Model owner, String name, boolean showInReport, boolean showInTrace) {
 		super(owner, name, showInReport, showInTrace);
 	}
 
+	/**
+	 * Neues Experiment mit allen notwendigen Parametern und einstellungen wird hoer definiert, gestartet und
+	 * nach der angegebenen Simulationsdauer gestoppt.
+	 * @param args cmd-args
+	 */
 	public static void main(String[] args) {
 
 		// Neues Experiment erzeugen
@@ -67,6 +75,11 @@ public class PrinterModel extends Model {
 	}
 
 
+	/**
+	 * Liefert für den angegebenen JobTyp die nächste Zwischenankunftszeit zurück
+	 * @param jobType Job-Typ
+	 * @return Zugehörige Zwischenankunftszeit
+	 */
 	public double getGenTime(JobType jobType){
 
 		switch (jobType){
@@ -80,7 +93,12 @@ public class PrinterModel extends Model {
 				return 0.0;
 		}
 	}
-
+	
+	/**
+	 * Liefert für den angegebenen JobTyp die nächste Bearbeitungszeit zurück
+	 * @param jobType Job-Typ
+	 * @return Zugehörige Bearbeitungszeit
+	 */
 	public double getExecTime(JobType jobType){
 
 		switch (jobType){
@@ -97,10 +115,21 @@ public class PrinterModel extends Model {
 
 	@Override
 	public String description() {
-		// TODO Beschreibung ergaenzen!!!!!!!!
-		return "Printer Modell (Prozess orientiert):";
+		String description = "PrinterModel:\n"+
+							 "simuliert einen Aufbau aus 2 Farbdruckern mit jeweils einer Queue fuer neu ankommende"+
+							 "Auftraege, sowie einer fuer unterbrochene Auftraege. Neue Jobs werden erstellt und reihen"+
+							 "sich in die kuerzere, zu einem Drucker gehoerende Warteschlange ein. Die Drucker arbeiten"+
+							 "dann die Auftraege einen nach dem anderen ab. sollte ein Auftrag mit hoeherer Prioritaet"+
+							 "als der derzeit bearbeitete Auftrag in eine Queue gelangen, muss der autuelle Auftrag unterbrochen"+
+							 "werden (in die Unterbrochenen-Queue verschoben werden). Die unterbrochenen Auftraege werden"+
+							 "dann sobals als moeglich fortgesetzt";
+		return description;
 	}
 
+	/**
+	 * Hier werden essentielle Komponenten wie Job-Generatoren, Drucker und der Wartungsprozess
+	 * erstellt, mit den entsprechenden Werten initialisiert und aktiviert oder für die Aktivierung vporbereitet.
+	 */
 	@Override
 	public void doInitialSchedules() {
 
@@ -145,7 +174,12 @@ public class PrinterModel extends Model {
 		printerInkEmptyProcess2.activate(new TimeSpan(300));
 
 	}
-
+	
+	/**
+	 * Hier werden die Generatoren für die Ankunfts- und Ausführungszeit, sowie die Drucker-
+	 * Queues erstellt. die Generatoren werden mit den angegebenen Werten initialisiert. Es
+	 * wurde eine gleichverteilung gewählt.
+	 */
 	@Override
 	public void init() {
 
@@ -168,11 +202,6 @@ public class PrinterModel extends Model {
 		// Warteschlangen fuer Drucker initialisieren
 		firstPrinterQueue = new ProcessQueue<JobProcess>(this, NameConstants.WARTESCHLANGE_DRUCKER_1, true, true);
 		secondPrinterQueue = new ProcessQueue<JobProcess>(this, NameConstants.WARTESCHLANGE_DRUCKER_2, true, true);
-		
-
-		// Warteschlange fuer freie Drucker initialisieren
-//		freePrinterQueue = new ProcessQueue<PrinterProcess>(this, "Warteschlange fuer freie Drucker", true, true);
-
 	}
 
 	/**
@@ -180,7 +209,7 @@ public class PrinterModel extends Model {
 	 * Falls beide gleich lang sind wird die des ersten Druckers zurueckgegeben.
 	 * @return Die kleinste Warteschlange (kleinste Gesamtbearbeitungszeit)
 	 */
-	public ProcessQueue getSmallestJobQueue(){
+	public ProcessQueue<JobProcess> getSmallestJobQueue(){
 		double firstQueueExecTime = 0.0;
 		double secondQueueExecTime = 0.0;
 
@@ -213,18 +242,33 @@ public class PrinterModel extends Model {
 		return supervisorPrinter2;
 	}
 
-	public ProcessQueue getCorrespondingQueue(String name){
+	/**
+	 * Gibt die zum angegebenen Drucker gehörende Queue zurück
+	 * @param name Drucker
+	 * @return zugehörige Prozess-Queue
+	 */
+	public ProcessQueue<JobProcess> getCorrespondingQueue(String name){
 		if (name.equals(NameConstants.ERSTER_DRUCKER))
 			return firstPrinterQueue;
 		return secondPrinterQueue;
 	}
 
-	public ProcessQueue getOtherPrinterQueue(String name){
+	/**
+	 * Gibt zu einem Drucker die Queue des jeweils anderen Druckers zurück
+	 * @param name Drucker
+	 * @return Queue des anderen Druckers
+	 */
+	public ProcessQueue<JobProcess> getOtherPrinterQueue(String name){
 		if (name.equals(NameConstants.ERSTER_DRUCKER))
 			return secondPrinterQueue;
 		return firstPrinterQueue;
 	}
 
+	/**
+	 * Gibt zu einem Drucker den anderen Drucker zurück
+	 * @param name Drucker
+	 * @return Anderer Drucker
+	 */
 	public PrinterProcess getOtherPrinterProcess(String name){
 		if (name.equals(NameConstants.ERSTER_DRUCKER))
 			return secondPrinter;

@@ -1,7 +1,10 @@
 package Drucker;
 
 /**
- * Created by laurentiu on 12.06.2016.
+ * Convenience-Klasse mit statischen, konstanten Namen, die in allen zugehörigen Klassen verwendet werden.
+ * @author Laurentiu Vlad
+ * @author Thomas Samy Dafir
+ * @author Dominik, Baumgartner
  */
 public class NameConstants {
 

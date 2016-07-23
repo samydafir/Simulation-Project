@@ -1,7 +1,9 @@
 package Drucker;
 
 /**
- *
+ * @author Laurentiu Vlad
+ * @author Thomas Samy Dafir
+ * @author Dominik, Baumgartner
  */
 public enum JobType {
 
