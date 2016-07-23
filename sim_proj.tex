@@ -16,7 +16,7 @@
 	
 	\section{Aufgabenstellung}
 	Es soll ein Szenario simuliert werden, bei dem 2 Farbdrucker mehreren Usern zur Verfügung stehen und in gewissen Zeitabständen Print-Jobs mit
-	verschiedenen Prioritäten und Abarbeitungszeiten erstellt werden. Insgesamt gibt es 3 Prioritätslevels: Student (niedrig), Professor (mittel), System (hoch). Jobs 
+	verschiedenen Prioritäten und Abarbeitungszeiten erstellt werden. Insgesamt gibt es 3 Prioritätslevels: Student (niedrig), Professor (mittel), System (hoch). Jobs
 	werden in Queues gesammelt und von beiden Druckern abgearbeitet. Dabei ist es immer möglich, dass jobs mit niedrigerer Priorität während ihrer Bearbeitung in 
 	einem Drucker von Jobs höherer Priuorität unterbrochen werden können, sprich Professoren-Jobs unterbrechen Studenten-Jobs, System-jobs unterbrechen alle 
 	anderen. Unterbrochene Jobs werden so bald als möglich wieder fortgesetzt.
@@ -44,12 +44,17 @@
 	jedoch beide Drucker besetzt, berechnet der Job beide Gesamtbearbeitungszeiten und reiht sich beim Drucker mit dem kleineren Wert ein. In der Erweiterung wird zusätzlich noch überprüft, ob sich ein Drucker im			Wartungsmodus befindet. Ist dies der Fall, reiht sich der Job beim anderen Drucker ein.
 	
 	\subsection{PrinterProcess}
+	Der $PrinterProcess$ repräsentiert einen Drucker. Wir benötigen also 2 Instanzen dieser Klasse, um das Modell zu realisieren. Ein PrinterProcess läuft ebenfalls während der gesamten Simulationsdauer, wird
+	jedoch zwischendurch immer wieder auf hold gesetzt, was der Abarbeitung eines Jobs entspricht. Der Drucker holt sich immer den Job mit der höchsten Priorität aus der Queue mit der höchsten Priorität (die 			Interrupted Queue, falls diese nicht leer ist).
+	
+	
 	
 	\subsection{Supervisor}
-	Der Supervisor steuert die Unterbrechung von Prozessen, die gerade bearbeitet werden. eine Instanz dieser Klasse überwacht jeweils einen Drucker und wird immer dann aktiviert, wenn sich ein 
+	Der Supervisor steuert die Unterbrechung von Prozessen, die gerade bearbeitet werden. Eine Instanz dieser Klasse überwacht jeweils einen Drucker und wird immer dann aktiviert, wenn sich ein 
 	neuer $JobProcess$ in eine Queue einordnet. Der Supervisor vergleicht immer die Priorität des aktuellen Jobs im Drucker mit der des neu eingefügten Job. Ist die Priorität des neuen Job höher, aktiviert
-	der $Supervisor$ den jeweiligen Drucker (der während der Abarbeitung eines Auftrags auf hold gesetzt ist). Der restliche Unterbrechungsvorgang mitsamt des Verschiebens des aktuellen Jobs in die
-	Interrupted-Queue wird vom (dann wieder aktiven) Drucker übernommen.
+	der $Supervisor$ den jeweiligen Drucker (der während der Abarbeitung eines Auftrags auf hold gesetzt ist). Der restliche Unterbrechungsvorgang mitsamt der Verschiebung des aktuellen Jobs in die
+	Interrupted-Queue wird vom (dann wieder aktiven) Drucker übernommen. Der $Supervisor$-Prozess wird dann wieder auf passivate gesetzt und wartet darauf, von einem neuen Job wieder aktiviert zu 
+	werden.
 	
 	
 	\section{Ergebnisse}
