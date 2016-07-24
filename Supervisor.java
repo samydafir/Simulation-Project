@@ -4,8 +4,8 @@ import co.paralleluniverse.fibers.SuspendExecution;
 import desmoj.core.simulator.*;
 
 /**
- * Der Supervisor analysiert bei jedem eintreffen eines neuen Job-Prozesses in einer Queue dessen Priorität und
- * vergleicht sie mit der des aktuellen Jobs im Drucker.Bei höherer Priorität des neuen Jobs wird der Drucker
+ * Der Supervisor analysiert bei jedem eintreffen eines neuen Job-Prozesses in einer Queue dessen Prioritaet und
+ * vergleicht sie mit der des aktuellen Jobs im Drucker.Bei hoeherer Prioritaet des neuen Jobs wird der Drucker
  * unterbrochen.
  * @author Laurentiu Vlad
  * @author Thomas Samy Dafir
@@ -22,9 +22,9 @@ public class Supervisor extends SimProcess {
     }
 
     /**
-     * wird vom JobProcess aktiviert, sobald sich dieser in eine Queue einordnet. Hier wird dann die Priorität
+     * Wird vom JobProcess aktiviert, sobald sich dieser in eine Queue einordnet. Hier wird dann die Prioritaet
      * des aktuellen Prozesses im Drucker mit der des neuen Jobs vergleichen. Ist die der neuen JobProcess-Objekts
-     * höher, wird der Drucker aktiviert (dieser führt dann die eigentliche Unterbrechung durch).
+     * hoeher, wird der Drucker aktiviert (dieser fuehrt dann die eigentliche Unterbrechung durch).
      */
     @Override
     public void lifeCycle() throws SuspendExecution {
@@ -39,7 +39,7 @@ public class Supervisor extends SimProcess {
 
             if (printerProcess.getCurrentProcess() == null)
                 passivate();
-            // Falls die Priorität des neuen Prozesses hoeher ist als der derzeit bearbeitete
+            // Falls die Prioritaet des neuen Prozesses hoeher ist als die des derzeit bearbeiteten
             // und der derzeitige unterbrechbar ist, 
             // aktiviere den Drucker.
             else if (processHasHigherPriority && isProcessInterruptible){

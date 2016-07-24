@@ -1,7 +1,7 @@
 package Drucker;
 
 /**
- * Convenience-Klasse mit statischen, konstanten Namen, die in allen zugehörigen Klassen verwendet werden.
+ * Convenience-Klasse mit statischen, konstanten Namen, die in allen zugehoerigen Klassen verwendet werden.
  * @author Laurentiu Vlad
  * @author Thomas Samy Dafir
  * @author Dominik, Baumgartner

@@ -4,11 +4,11 @@ import co.paralleluniverse.fibers.SuspendExecution;
 import desmoj.core.simulator.*;
 
 /**
- * NewJobProcess übernimmt die Erstellung neuer Jobs. Jedes NewJobProcess Objekt übernimmt die Erstellung
+ * NewJobProcess uebernimmt die Erstellung neuer Jobs. Jedes NewJobProcess Objekt uebernimmt die Erstellung
  * eines Job Typs. Ein neues Job Objekt wir immer nach einer festgelegten Zwischenankunftszeit erstellt, mit
- * einer Ausführungszeit versehen und aktiviert. Danach wartet der NewJobProcess auf den Ablauf der Zwischen-
- * Ankunftszeit bevor ein neues Objekt erstellt wird. Zwischenankunftszeiten und Ausführungszeiten werden von
- * ContDistUniform- Objekten im Model zurückgegeben.
+ * einer Ausfuehrungszeit versehen und aktiviert. Danach wartet der NewJobProcess auf den Ablauf der Zwischen-
+ * ankunftszeit bevor ein neues Objekt erstellt wird. Zwischenankunftszeiten und Ausfuehrungszeiten werden von
+ * ContDistUniform- Objekten im Model zurueckgegeben.
  * @author Laurentiu Vlad
  * @author Thomas Samy Dafir
  * @author Dominik, Baumgartner
@@ -24,7 +24,7 @@ public class NewJobProcess extends SimProcess {
 		printerModel = (PrinterModel) owner;
 	}
 	/**
-	 * Wird vom PrinterModel aus aktiviert. Läuft während der gesamten Simulationsdauer und erstellt neue
+	 * Wird vom PrinterModel aus aktiviert. Laeuft waehrend der gesamten Simulationsdauer und erstellt neue
 	 * JobProcess-Objekte.
 	 */
 	@Override
