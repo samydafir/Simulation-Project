@@ -69,81 +69,81 @@
 	immer in die kürzere einreihen (bis zum Längenausgleich ist dies die des gewarteten Druckers).
 	
 	\section{Ergebnisse}
-		\subsection{Simulationsparameter}
-		Folgende Simulationsparameter wurden sowohl für den Standardfall (beide Drucker sind während der gesamten Simulationszeit aktiv) als auch für die erweiterte Simulation (Drucker können während der
-		 Simulationszeit ausfallen) angewendet.\\
-		\\
-		Weiters wurden in der erweiterten Simulation zwei Fälle simuliert.
-		Im ersten Fall wurde der erste Drucker nach 100 Minuten unterbrochen und dann der zweite nach 300 Minuten.
-		Im zweiten Fall wurde zwei mal der gleiche Drucker unterbrochen. Das erste mal nach 100 Minuten und das zweite mal nach 300 Minuten.\\
-		Die Unterbrechungen dauern je 100 Minuten und sollen einen Ausfall des Druckers simuliere (z.B. einen erforderlichen der OPC Trommel eines Tintenstrahldruckers).
-		\\
-			\begin{itemize}
-				\item Simulationsdauer: 10h / 600 min
-				\item Durchgeführte Simulationen: 30
-				\item StudJob: Ankunft alle 6-10 min, Bearbeitung: 2-6 min
-				\item ProfJob: Ankunft alle 10-14 min, Bearbeitung: 2-6 min
-				\item SystemJob: Ankunft alle 15-25 min, Bearbeitung: 2-10 min
-				\item Wartung: Beginn: 100 min, 300 min, Dauer: 100 min
-			\end{itemize}	
-			
+	\subsection{Simulationsparameter}
+	Folgende Simulationsparameter wurden sowohl für den Standardfall (beide Drucker sind während der gesamten Simulationszeit aktiv) als auch für die erweiterte Simulation (Drucker können während der
+	 Simulationszeit ausfallen) angewendet.\\
+	\\
+	Weiters wurden in der erweiterten Simulation zwei Fälle simuliert.
+	Im ersten Fall wurde der erste Drucker nach 100 Minuten unterbrochen und dann der zweite nach 300 Minuten.
+	Im zweiten Fall wurde zwei mal der gleiche Drucker unterbrochen. Das erste mal nach 100 Minuten und das zweite mal nach 300 Minuten.\\
+	Die Unterbrechungen dauern je 100 Minuten und sollen einen Ausfall des Druckers simuliere (z.B. einen erforderlichen der OPC Trommel eines Tintenstrahldruckers).
+	\\
+	\begin{itemize}
+		\item Simulationsdauer: 10h / 600 min
+		\item Durchgeführte Simulationen: 30
+		\item StudJob: Ankunft alle 6-10 min, Bearbeitung: 2-6 min
+		\item ProfJob: Ankunft alle 10-14 min, Bearbeitung: 2-6 min
+		\item SystemJob: Ankunft alle 15-25 min, Bearbeitung: 2-10 min
+		\item Wartung: Beginn: 100 min, 300 min, Dauer: 100 min
+	\end{itemize}	
+		
 
-		\subsection{Zusammenfassung}
-				\begin{tabular}{|l|c|c|c|}
-					\hline  & Ohne Erw. & Erw. Stdandard-Fall & Erw. Extremfall \\ 
-					\hline Mittlere WZ Stud 	   & 1,33 & 38,5 & 55 \\ 
-					\hline Mittlere WZ Prof 	   & 0,98 & 3,9 & 4 \\ 
-					\hline Mittlere WZ Sys 		   & 0 & 0,1 & 0,1 \\ 
-					\hline Jobs Drucker 1 gesamt   & 86 & 96 & 13 \\ 
-					\hline Jobs Drucker 2 gesamt   & 66 & 67 & 123 \\ 
-					\hline Max WS Drucker 1 	   & 1 & 11 & 1 \\ 
-					\hline Max WS Drucker 2 	   & 0 & 18 & 18 \\ 
-					\hline Mittlere WS Drucker 1   & 0 & 1,4 & 0 \\ 
-					\hline Mittlere WS Drucker 2   & 0 & 3,2 & 8,5 \\
-					\hline Unterbrechungen gesamt  & 13 & 36 & 46 \\  
-					\hline Unterbrechungen/h 	   & 1,3 & 3,6 & 4,6 \\ 
-					\hline Nicht mehr bearbeitet   & 0 & 0 & 36 \\
-					\hline 
-				\end{tabular}
-		\\	
-		\\
-		\subsubsection{Analyse: Standardfall}
-		Die Ergebnisse der Standard-Simulation (ohne Erweiterung) entsprechen den zuvor getroffenen Annahmen. Die mittlere Wartezeit der System-Jobs ist 0 was bedeutet, dass diese sofort an die Reihe
-		 (Unterbrechung des aktuell bearbeitenden Jobs) kamen sobald sie sich in eine Queue eingereiht hatten. \\
-		Es ist hier jedoch anzumerken, dass diese Simulation nur eine einzige Unterbrechung ein und desselben Jobs erlaubt. Wurde also z.B. ein Stud-Job einmal unterbrochen, so kann dieser kein zweites mal
-		 unterbrochen werden.
-		Die Wartezeiten der Stud-Jobs und Prof-Jobs entsprechen ebenfalls den Erwartungen da diese, entsprechend ihrer Priorität, eine höhere oder niedrigere WZ haben.\\
-		\\
-		Auch die Verteilung der Jobs auf die Drucker ist weitestgehend ausgeglichen.
-		[Jobs reihen sich in jene WS ein, dessen Summe aller vorhanden Jobs am kleinsten ist]\\
-		\\
-		Etwas unerwartet sind hingegen die max. Längen der Warteschlangen beider Drucker. Die Jobs des zweiten Druckers kamen immer an die Reihe sobald diese sich in die WS eingereiht hatten und nur beim
-		 ersten Drucker musste ein Job gelegentlich warten. Das bedeutet, dass zweit Drucker vollkommen ausreichen um die Druckaufträge in einer annehmbaren Zeit abzuarbeiten.\\
-		
-		
-		\subsubsection{Analyse: Erweiterung Standardfall}
-		\texttt{(Unterbrechung des ersten Drucker nach 100 min und der zweite Drucker nach 300 min.)}
-	    \\ \\
-		Hier fällt sofort auf, dass sich die mittlere WZ der Stud-Jobs von 1,33 min (Simulation ohne Erweiterung)  auf 38,5 min erhöht hat was einer Erhöhung von ca. 2900\% entspricht. Im Gegensatz dazu
-		 mussten Prof-Jobs ca. 300\% 
-		[0,98 min auf 3,9 min] und Sys-Jobs sogar nur 1\% [0 min auf 0,1 min] länger warten.\\
-		\\
-		Trotzt der Unterbrechung beider Drucker, ist auch hier die Verteilung der Jobs, mit 96 Jobs abgearbeitet von Drucker 1 und 67 Jobs von Drucker 2, relativ ausgeglichen.\\
-		\\
-		Was sich signifikant erhöht hat ist die maximale Anzahl an Jobs in den Warteschlangen. \\
-		Drucker 1: von 1 auf 11\\
-		Drucker 2: von 0 auf 18\\
-		Dies war zu erwarten bei einem Ausfall, alle Jobs in die WS des funktionsfähigen Druckers eingereiht werden.\\
-		\\
-		Das erklärt auch die Verdreifachung der Job Unterbrechungen von 13 auf 36.
-		
-		\subsubsection{Analyse: Erweiterung Extremfall}
-		\texttt{(Zweimalige Unterbrechung des gleichen Druckers. Das erste mal nach 100 min und das zweite mal nach 300 min.)}
-		\\ \\
-		Obwohl in diesem Fall zwei mal der gleich Drucker ausgefallen ist, haben sich hier die mittleren WZ der Jobs nicht nennenswert geändert. Lediglich die Stud-Job erfuhren eine Zunahme von ca. 140\%
-		 [38,5 min auf 55 min] was so nicht zu erwarten war.\\
-		\\
-		Die Verteilung der Jobs auf die Drucker ist auch so zu erwarten gewesen da Drucker 1 einen drittel der gesamten Simulationszeit ausgefallen ist (2x 100 min). Dies spiegelt sich auch in den maximalen und
-		 mittleren WS Längen beider Drucker wieder.
-
+	\subsection{Zusammenfassung}
+	\begin{tabular}{|l|c|c|c|}
+		\hline  & Ohne Erw. & Erw. Stdandard-Fall & Erw. Extremfall \\ 
+		\hline Mittlere WZ Stud 	   & 1,33 & 38,5 & 55 \\ 
+		\hline Mittlere WZ Prof 	   & 0,98 & 3,9 & 4 \\ 
+		\hline Mittlere WZ Sys 		   & 0 & 0,1 & 0,1 \\ 
+		\hline Jobs Drucker 1 gesamt   & 86 & 96 & 13 \\ 
+		\hline Jobs Drucker 2 gesamt   & 66 & 67 & 123 \\ 
+		\hline Max WS Drucker 1 	   & 1 & 11 & 1 \\ 
+		\hline Max WS Drucker 2 	   & 0 & 18 & 18 \\ 
+		\hline Mittlere WS Drucker 1   & 0 & 1,4 & 0 \\ 
+		\hline Mittlere WS Drucker 2   & 0 & 3,2 & 8,5 \\
+		\hline Unterbrechungen gesamt  & 13 & 36 & 46 \\  
+		\hline Unterbrechungen/h 	   & 1,3 & 3,6 & 4,6 \\ 
+		\hline Nicht mehr bearbeitet   & 0 & 0 & 36 \\
+		\hline 
+	\end{tabular}
+	\\	
+	\\
+	\subsubsection{Analyse: Standardfall}
+	Die Ergebnisse der Standard-Simulation (ohne Erweiterung) entsprechen den zuvor getroffenen Annahmen. Die mittlere Wartezeit der System-Jobs ist 0 was bedeutet, dass diese sofort an die Reihe
+	 (Unterbrechung des aktuell bearbeitenden Jobs) kamen sobald sie sich in eine Queue eingereiht hatten. \\
+	Es ist hier jedoch anzumerken, dass diese Simulation nur eine einzige Unterbrechung ein und desselben Jobs erlaubt. Wurde also z.B. ein Stud-Job einmal unterbrochen, so kann dieser kein zweites mal
+	 unterbrochen werden.
+	Die Wartezeiten der Stud-Jobs und Prof-Jobs entsprechen ebenfalls den Erwartungen da diese, entsprechend ihrer Priorität, eine höhere oder niedrigere WZ haben.\\
+	\\
+	Auch die Verteilung der Jobs auf die Drucker ist weitestgehend ausgeglichen.
+	[Jobs reihen sich in jene WS ein, dessen Summe aller vorhanden Jobs am kleinsten ist]\\
+	\\
+	Etwas unerwartet sind hingegen die max. Längen der Warteschlangen beider Drucker. Die Jobs des zweiten Druckers kamen immer an die Reihe sobald diese sich in die WS eingereiht hatten und nur beim
+	 ersten Drucker musste ein Job gelegentlich warten. Das bedeutet, dass zweit Drucker vollkommen ausreichen um die Druckaufträge in einer annehmbaren Zeit abzuarbeiten.\\
+	
+	
+	\subsubsection{Analyse: Erweiterung Standardfall}
+	\texttt{(Unterbrechung des ersten Drucker nach 100 min und der zweite Drucker nach 300 min.)}
+	   \\ \\
+	Hier fällt sofort auf, dass sich die mittlere WZ der Stud-Jobs von 1,33 min (Simulation ohne Erweiterung)  auf 38,5 min erhöht hat was einer Erhöhung von ca. 2900\% entspricht. Im Gegensatz dazu
+	 mussten Prof-Jobs ca. 300\% 
+	[0,98 min auf 3,9 min] und Sys-Jobs sogar nur 1\% [0 min auf 0,1 min] länger warten.\\
+	\\
+	Trotzt der Unterbrechung beider Drucker, ist auch hier die Verteilung der Jobs, mit 96 Jobs abgearbeitet von Drucker 1 und 67 Jobs von Drucker 2, relativ ausgeglichen.\\
+	\\
+	Was sich signifikant erhöht hat ist die maximale Anzahl an Jobs in den Warteschlangen. \\
+	Drucker 1: von 1 auf 11\\
+	Drucker 2: von 0 auf 18\\
+	Dies war zu erwarten bei einem Ausfall, alle Jobs in die WS des funktionsfähigen Druckers eingereiht werden.\\
+	\\
+	Das erklärt auch die Verdreifachung der Job Unterbrechungen von 13 auf 36.
+	
+	\subsubsection{Analyse: Erweiterung Extremfall}
+	\texttt{(Zweimalige Unterbrechung des gleichen Druckers. Das erste mal nach 100 min und das zweite mal nach 300 min.)}
+	\\ \\
+	Obwohl in diesem Fall zwei mal der gleich Drucker ausgefallen ist, haben sich hier die mittleren WZ der Jobs nicht nennenswert geändert. Lediglich die Stud-Job erfuhren eine Zunahme von ca. 140\%
+	 [38,5 min auf 55 min] was so nicht zu erwarten war.\\
+	\\
+	Die Verteilung der Jobs auf die Drucker ist auch so zu erwarten gewesen da Drucker 1 einen drittel der gesamten Simulationszeit ausgefallen ist (2x 100 min). Dies spiegelt sich auch in den maximalen und
+	 mittleren WS Längen beider Drucker wieder.
+	 
 \end{document}
