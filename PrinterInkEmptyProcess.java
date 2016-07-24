@@ -5,7 +5,7 @@ import desmoj.core.simulator.Model;
 import desmoj.core.simulator.SimProcess;
 
 /**
- * Der PrinterInkEmptyProcess repräsentiert das Eintreten eines Wartungsereignisses.
+ * Der PrinterInkEmptyProcess repraesentiert das Eintreten eines Wartungsereignisses.
  * @author Laurentiu Vlad
  * @author Thomas Samy Dafir
  * @author Dominik, Baumgartner
@@ -23,7 +23,7 @@ public class PrinterInkEmptyProcess extends SimProcess {
     }
 
     /**
-     * Wird nach einem im PrinterModel festgelegten Zeitpunkt aktiviert. Wählt zufällig einen der beiden Drucker aus
+     * Wird nach einem im PrinterModel festgelegten Zeitpunkt aktiviert. Waehlt zufaellig einen der beiden Drucker aus
      * und versetzt ihn in den Wartungszustand (alle ankommenden Job-Prozesse werden zum anderen Drucker umgeleitet).
      */
     @Override

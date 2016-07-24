@@ -4,9 +4,9 @@ import desmoj.core.dist.ContDistUniform;
 import desmoj.core.simulator.*;
 
 /**
- * Das PrinterModel enthält alle Komponenten, die für die Simulation des Farbdrucker-Setup notwendig sind.
- * Hier werden unter anderem Queues, Drucker, Vereilungsfunktionen für Ankunfts- und Bearbeitungszeiten, sowie
- * Supervisor und Job-Generatoren definiert und mit den zugehörigen Werten initialisiert.
+ * Das PrinterModel enthaelt alle Komponenten, die fuer die Simulation des Farbdrucker-Setup notwendig sind.
+ * Hier werden unter anderem Queues, Drucker, Vereilungsfunktionen fuer Ankunfts- und Bearbeitungszeiten, sowie
+ * Supervisor und Job-Generatoren definiert und mit den zugehoerigen Werten initialisiert.
  * @author Laurentiu Vlad
  * @author Thomas Samy Dafir
  * @author Dominik, Baumgartner
@@ -37,7 +37,7 @@ public class PrinterModel extends Model {
 	}
 
 	/**
-	 * Neues Experiment mit allen notwendigen Parametern und einstellungen wird hoer definiert, gestartet und
+	 * Neues Experiment mit allen notwendigen Parametern und Einstellungen wird hier definiert, gestartet und
 	 * nach der angegebenen Simulationsdauer gestoppt.
 	 * @param args cmd-args
 	 */
@@ -47,7 +47,7 @@ public class PrinterModel extends Model {
 		Experiment printerExperiment = new Experiment("Drucker-Experiment (Prozess orientiert)");
 
 		// neues Modell erzeugen
-		// Par 1: null markiert main model, sonst Mastermodell angeben
+		// null markiert main model, sonst Mastermodell angeben
 		PrinterModel printerModel = new PrinterModel(null, "Drucker Modell", true, true);
 
 		// Modell mit Experiment verbinden
@@ -58,7 +58,7 @@ public class PrinterModel extends Model {
 		printerExperiment.debugPeriod(new TimeInstant(0.0), new TimeInstant(60));
 
 		// Ende der Simulation setzen
-		// -> hier 4 Stunden (= 240 min)
+		// -> hier 10 Stunden (= 600 min)
 		printerExperiment.stop(new TimeInstant(600));
 
 		// Experiment zur Zeit 0.0 starten
@@ -76,9 +76,9 @@ public class PrinterModel extends Model {
 
 
 	/**
-	 * Liefert für den angegebenen JobTyp die nächste Zwischenankunftszeit zurück
+	 * Liefert fuer den angegebenen JobTyp die naechste Zwischenankunftszeit zurueck
 	 * @param jobType Job-Typ
-	 * @return Zugehörige Zwischenankunftszeit
+	 * @return Zugehoerige Zwischenankunftszeit
 	 */
 	public double getGenTime(JobType jobType){
 
@@ -95,9 +95,9 @@ public class PrinterModel extends Model {
 	}
 	
 	/**
-	 * Liefert für den angegebenen JobTyp die nächste Bearbeitungszeit zurück
+	 * Liefert fuer den angegebenen JobTyp die naechste Bearbeitungszeit zurueck
 	 * @param jobType Job-Typ
-	 * @return Zugehörige Bearbeitungszeit
+	 * @return Zugehoerige Bearbeitungszeit
 	 */
 	public double getExecTime(JobType jobType){
 
@@ -128,7 +128,7 @@ public class PrinterModel extends Model {
 
 	/**
 	 * Hier werden essentielle Komponenten wie Job-Generatoren, Drucker und der Wartungsprozess
-	 * erstellt, mit den entsprechenden Werten initialisiert und aktiviert oder für die Aktivierung vporbereitet.
+	 * erstellt, mit den entsprechenden Werten initialisiert und aktiviert oder fuer die Aktivierung vorbereitet.
 	 */
 	@Override
 	public void doInitialSchedules() {
@@ -176,9 +176,9 @@ public class PrinterModel extends Model {
 	}
 	
 	/**
-	 * Hier werden die Generatoren für die Ankunfts- und Ausführungszeit, sowie die Drucker-
-	 * Queues erstellt. die Generatoren werden mit den angegebenen Werten initialisiert. Es
-	 * wurde eine gleichverteilung gewählt.
+	 * Hier werden die Generatoren fuer die Ankunfts- und Ausfuehrungszeit, sowie die Drucker-
+	 * Queues erstellt. Die Generatoren werden mit den angegebenen Werten initialisiert. Es
+	 * wurde eine gleichverteilung gewaehlt.
 	 */
 	@Override
 	public void init() {
@@ -205,9 +205,9 @@ public class PrinterModel extends Model {
 	}
 
 	/**
-	 * Berechnet die Gesamtbearbeitungszeit der Warteschlangen beider Drucker und zurueckgegeben die kuerzere.
-	 * Falls beide gleich lang sind wird die des ersten Druckers zurueckgegeben.
-	 * @return Die kleinste Warteschlange (kleinste Gesamtbearbeitungszeit)
+	 * Berechnet die Gesamtbearbeitungszeit der Warteschlangen beider Drucker und gibt die kuerzere zurueck.
+	 * Falls beide gleich lang sind, wird die des ersten Druckers zurueckgegeben.
+	 * @return Die kuerzeste Warteschlange (kleinste Gesamtbearbeitungszeit)
 	 */
 	public ProcessQueue<JobProcess> getSmallestJobQueue(){
 		double firstQueueExecTime = 0.0;
@@ -243,9 +243,9 @@ public class PrinterModel extends Model {
 	}
 
 	/**
-	 * Gibt die zum angegebenen Drucker gehörende Queue zurück
+	 * Gibt die zum angegebenen Drucker gehoerende Queue zurueck
 	 * @param name Drucker
-	 * @return zugehörige Prozess-Queue
+	 * @return zugehoerige Prozess-Queue
 	 */
 	public ProcessQueue<JobProcess> getCorrespondingQueue(String name){
 		if (name.equals(NameConstants.ERSTER_DRUCKER))
@@ -254,7 +254,7 @@ public class PrinterModel extends Model {
 	}
 
 	/**
-	 * Gibt zu einem Drucker die Queue des jeweils anderen Druckers zurück
+	 * Gibt zu einem Drucker die Queue des jeweils anderen Druckers zurueck
 	 * @param name Drucker
 	 * @return Queue des anderen Druckers
 	 */
@@ -265,7 +265,7 @@ public class PrinterModel extends Model {
 	}
 
 	/**
-	 * Gibt zu einem Drucker den anderen Drucker zurück
+	 * Gibt zu einem Drucker den anderen Drucker zurueck
 	 * @param name Drucker
 	 * @return Anderer Drucker
 	 */

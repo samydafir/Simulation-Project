@@ -4,11 +4,11 @@ import co.paralleluniverse.fibers.SuspendExecution;
 import desmoj.core.simulator.*;
 
 /**
- * Jeder PrinterProcess repräsentiert einen Drucker. Dieser läuft während der gesamten Simulationsdauer.
- * Der PrinterProcess hat die Aufgabe, den Prozess mit der jeweils höchsten Priorität aus der Queue zu holen und zu bearbeiten.
- * Dabei kann der jeweilige Bearbeitungsvorgang von einem neu eintreffenden Prozess höherer Priorität unterborchen werden.
- * Auch Wartungsereignisse werden hier berücksichtigt. Tritt eine Wartungsereignis ein, wird der jeweilige Drucker auf hold
- * gesetzt, bis die Wartung beendet ist. 
+ * Jeder PrinterProcess repraesentiert einen Drucker. Dieser laeuft waehrend der gesamten Simulationsdauer.
+ * Der PrinterProcess hat die Aufgabe, den Prozess mit der jeweils hoechsten Prioritaet aus der Queue zu holen und zu 
+ * bearbeiten. Dabei kann der jeweilige Bearbeitungsvorgang von einem neu eintreffenden Prozess hoeherer Prioritaet 
+ * unterborchen werden. Auch Wartungsereignisse werden hier beruecksichtigt. Tritt eine Wartungsereignis ein, wird der 
+ * jeweilige Drucker auf hold gesetzt, bis die Wartung beendet ist. 
  * @author Laurentiu Vlad
  * @author Thomas Samy Dafir
  * @author Dominik, Baumgartner
@@ -31,10 +31,10 @@ public class PrinterProcess extends SimProcess{
 	}
 	
 	/**
-	 * Wird sofort bei Beginn der Simulation vom Model aus gestartet. Verwaltet Abarbeitung, Unterbrehung und Wartung. Wird ein Job
+	 * Wird sofort bei Beginn der Simulation vom Model aus gestartet. Verwaltet Abarbeitung, Unterbrechung und Wartung. Wird ein Job
 	 * bearbeitet, wird der PrinterProcess auf hold gesetzt, bis dieser Job abgearbeitet ist. Kommt es jedoch zu einer Unterbrechung,
-	 * wird dies aufgrund der noch nicht abgelaufenen Bearbeitungszeit des Jobs festgestellt und der job wird mit der Restzeit in die 
-	 * Unterbrochenen-Queue verschoben. Danach wird der Job höchster Priorität aus der Prozess-Queue geholt und bearbeitet.
+	 * wird dies aufgrund der noch nicht abgelaufenen Bearbeitungszeit des Jobs festgestellt und der Job wird mit der Restzeit in die 
+	 * Unterbrochenen-Queue verschoben. Danach wird der Job hoechster Prioritaet aus der Prozess-Queue geholt und bearbeitet.
 	 * Kommt es zur Wartung, werden alle Jobs in die Queue des anderen Druckers verschoben und der Drucker selbst aud hold gesetzt.
 	 */
 	@Override
@@ -42,7 +42,7 @@ public class PrinterProcess extends SimProcess{
 		String name;
 		
 		while (true){
-			// Falls der Drucker in Wartung ist (z.B. Toner Wechsel), wird die Zeit der Wartung abgehalten.
+			// Falls der Drucker in Wartung ist (z.B. Toner Wechsel), wird er fuer die Zeit der Wartung angehalten.
 			if (isInMaintainance){
 				hold(new TimeSpan(inkEmptyProcess.getExecutionTime()));
 				isInMaintainance = false;
@@ -53,7 +53,7 @@ public class PrinterProcess extends SimProcess{
 			// Holen der Warteschlange welche zu diesem Drucker gehoert
 			ProcessQueue<JobProcess> correspondingQueue = printerModel.getCorrespondingQueue(name);
 
-			// Falls die WS leer ist, wird das "besetzt"-Flag auf false gestellt und der Process auf passivate().
+			// Falls die WS leer ist, wird die "besetzt"-Flag auf false und der Process auf passivate gesetzt.
 			if (correspondingQueue.isEmpty() && interruptedJobsQueue.isEmpty()){
 				printerOccupied = false;
 				passivate();
@@ -74,7 +74,7 @@ public class PrinterProcess extends SimProcess{
 				printerOccupied = true;
 
 				// Festhalten der Startzeit des Abarbeitugsprozesses.
-				// Dies ist noetig, im Falle einer Unterbrechung des Processes durch einen Job hoeherer Prioritaet
+				// Dies ist im Falle einer Unterbrechung des Processes durch einen Job hoeherer Prioritaet noetig
 				double startingTime = printerModel.getExperiment().getSimClock().getTime().getTimeAsDouble();
 
 				// Job wird abgearbeitet -> Drucker wird solange inaktiv gestellt
@@ -84,9 +84,9 @@ public class PrinterProcess extends SimProcess{
 				double endTime = printerModel.getExperiment().getSimClock().getTime().getTimeAsDouble();
 
 				// Falls die Differenz zwischen Start- und Endzeit der Abarbeitung kleiner ist als
-				// als die eigentliche Abarbeitungszeit des Jobs ist, bedeutet das, dass hier eine Unterbrechung
+				// die eigentliche Abarbeitungszeit des Jobs, bedeutet das, dass hier eine Unterbrechung
 				// seitens des Supervisors vorgenommen wurde.
-				double diff = Double.valueOf(String.valueOf(endTime - startingTime).substring(0, 7)) + 0.0001;
+				double diff = endTime - startingTime + 0.001;
 				double execTime = Double.valueOf(String.valueOf(currentProcess.getJobExecutionTime()).substring(0, 7));
 
 				if (isInMaintainance){
@@ -125,7 +125,7 @@ public class PrinterProcess extends SimProcess{
 					currentProcess.setIsInterruptable(false);
 					// Uebrige Druckzeit des Jobs ermitteln und setzen
 					currentProcess.setJobExecutionTime(endTime - startingTime);
-					// dann diesen Job in die Unterbrochenen-Queue dieses Druckers setzen
+					// dann diesen Job in die Unterbrochenen-Queue dieses Druckers verschieben
 					interruptedJobsQueue.insert(currentProcess);
 					
 					printerInterrupted = true;

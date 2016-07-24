@@ -4,9 +4,9 @@ import co.paralleluniverse.fibers.SuspendExecution;
 import desmoj.core.simulator.*;
 
 /**
- * JobProcess repräsentiert Printer Jobs. Um welchen Typ von Job es sich handelt, wird mit den Eigenschaften
+ * JobProcess repraesentiert Printer Jobs. Um welchen Typ von Job es sich handelt, wird mit den Eigenschaften
  * des jeweiligen Objekts festgelegt. Jeder Job hat die Aufgabe, die Printer-Queues und Printer zu analysieren
- * und sich so einzureihen, dass eine möglichst kurze Wartezeit entsteht -> jeder Job reiht sich also in die
+ * und sich so einzureihen, dass eine moeglichst kurze Wartezeit entsteht -> jeder Job reiht sich also in die
  * Queue mit der niedrigsten Gesamtbearbeitungszeit ein.
  * @author Laurentiu Vlad
  * @author Thomas Samy Dafir
@@ -28,11 +28,11 @@ public class JobProcess extends SimProcess {
     /**
      * Wird aufgerufen, sobald ein neuer Prozess in NewJbProcess erstellt wurde. Hier werden 2 verschiedene
      * Verhaltensweisen unterschieden:
-     * 1. Ist eine Printer-Queue leer, reiht sich dieser JobProcess in diese Queue ein und setzt den dazugehörigen
+     * 1. Ist eine Printer-Queue leer, reiht sich dieser JobProcess in diese Queue ein und setzt den dazugehoerigen
      *    Printer sofort auf besetzt.
      * 2. enthalten beide Queues mindestens einen Job, analysiert der JobProcess alle Queues und reiht sich in die mit
-     * 	  der kürzesten Gesamtbearbeitungszeit ein.
-     * Das herausnehmen der Prozesse aus den Queues übernehmen die Printer selbst. Der Job wird passiviert, sobald er
+     * 	  der kuerzesten Gesamtbearbeitungszeit ein.
+     * Das herausnehmen der Prozesse aus den Queues uebernehmen die Printer selbst. Der Job wird passiviert, sobald er
      * sich eingereiht hat.
      */
     @Override
@@ -45,7 +45,7 @@ public class JobProcess extends SimProcess {
         boolean secondPrinterInMaintainance = printerModel.getSecondPrinter().isInMaintainance();
 
         /*
-         * Hier wird abgefragt, ob sich ein Drucker im Wartungszustand befindet. Ist dies der Fall, wird der
+         * Hier wird abgefragt, ob sich ein Drucker im Wartungszustand befindet. Ist dies der Fall,
          * reiht sich der aktuelle Job sofort in die Queue des anderen Druckers ein. 
          */
         if (firstPrinterInMaintainance){
@@ -56,7 +56,7 @@ public class JobProcess extends SimProcess {
             isInFirstQueue = true;
         }else {
         	
-        	/* Hier wird überprüft, ob ein Drucker frei ist. Ist dies der Fall, reiht sich der Job sofort
+        	/* Hier wird ueberprueft, ob ein Drucker frei ist. Ist dies der Fall, reiht sich der Job sofort
         	 * in dessen Queue ein.
         	 */
             if (!printerModel.getFirstPrinter().isPrinterOccupied()) {
