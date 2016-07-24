@@ -73,7 +73,7 @@
 	Folgende Simulationsparameter wurden sowohl für den Standardfall (beide Drucker sind während der gesamten Simulationszeit aktiv) als auch für die erweiterte Simulation (Drucker können während der
 	 Simulationszeit ausfallen) angewendet.\\
 	\\
-	Weiters wurden in der erweiterten Simulation zwei Fälle simuliert.
+	Für die Erweiterte Simulation gelten noch folgende Werte.\\
 	Im ersten Fall wurde der erste Drucker nach 100 Minuten unterbrochen und dann der zweite nach 300 Minuten.
 	Im zweiten Fall wurde zwei mal der gleiche Drucker unterbrochen. Das erste mal nach 100 Minuten und das zweite mal nach 300 Minuten.\\
 	Die Unterbrechungen dauern je 100 Minuten und sollen einen Ausfall des Druckers simuliere (z.B. einen erforderlichen der OPC Trommel eines Tintenstrahldruckers).
@@ -110,15 +110,13 @@
 	\subsubsection{Analyse: Standardfall}
 	Die Ergebnisse der Standard-Simulation (ohne Erweiterung) entsprechen den zuvor getroffenen Annahmen. Die mittlere Wartezeit der System-Jobs ist 0 was bedeutet, dass diese sofort an die Reihe
 	 (Unterbrechung des aktuell bearbeitenden Jobs) kamen sobald sie sich in eine Queue eingereiht hatten. \\
-	Es ist hier jedoch anzumerken, dass diese Simulation nur eine einzige Unterbrechung ein und desselben Jobs erlaubt. Wurde also z.B. ein Stud-Job einmal unterbrochen, so kann dieser kein zweites mal
-	 unterbrochen werden.
+	Wie bereits erwähnt erlaubt die Simulation nur eine einzige Unterbrechung ein und desselben Jobs. Wurde also z.B. ein Stud-Job einmal unterbrochen, so kann dieser kein zweites mal unterbrochen werden.
 	Die Wartezeiten der Stud-Jobs und Prof-Jobs entsprechen ebenfalls den Erwartungen da diese, entsprechend ihrer Priorität, eine höhere oder niedrigere WZ haben.\\
 	\\
 	Auch die Verteilung der Jobs auf die Drucker ist weitestgehend ausgeglichen.
 	[Jobs reihen sich in jene WS ein, dessen Summe aller vorhanden Jobs am kleinsten ist]\\
 	\\
-	Etwas unerwartet sind hingegen die max. Längen der Warteschlangen beider Drucker. Die Jobs des zweiten Druckers kamen immer an die Reihe sobald diese sich in die WS eingereiht hatten und nur beim
-	 ersten Drucker musste ein Job gelegentlich warten. Das bedeutet, dass zweit Drucker vollkommen ausreichen um die Druckaufträge in einer annehmbaren Zeit abzuarbeiten.\\
+	Etwas unerwartet sind hingegen die max. Längen der Warteschlangen beider Drucker. Die Jobs des zweiten Druckers kamen immer an die Reihe sobald diese sich in die WS eingereiht hatten und nur beim ersten Drucker musste ein Job gelegentlich warten. Das bedeutet, dass zwei Drucker vollkommen ausreichen um die Druckaufträge in einer annehmbaren Zeit abzuarbeiten.\\
 	
 	
 	\subsubsection{Analyse: Erweiterung Standardfall}
