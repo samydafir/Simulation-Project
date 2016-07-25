@@ -33,7 +33,7 @@
 	\subsection{NewJobProcess}
 	Wie in der Aufgabenstellung beschrieben, erhalten unsere beiden Drucker in gewissen Zeitabständen Druckaufträge unterschiedlicher Priorität. Diese werden vermutlich von Usern oder dem System
 	in Auftrag gegeben. Um dies zu simulieren brauchen wir natürlich eine Art ``Job-Generator''. Diese Aufgabe wird vom $NewJobProcess$ übernommen. $NewJobProcess$ läuft während der gesamten 
-	Simulationsdauer und erstellt in gewissen Zeitabständen neue Jobs mit einer bestimmten Ausführungsdauer. Danach wird für eine gewisse Zeit gewartet bevor wieder ein Job erstellt wird. Die Warte-
+	Simulationsdauer und erstellt in gewissen Zeitabständen neue Jobs mit einer bestimmten Ausführungsdauer. Danach wird für eine gewisse Zeit gewartet, bevor wieder ein Job erstellt wird. Die Warte-
 	und Ausführungszeiten werden von einem $ContDistUniform$-Objekt in der Modell Klasse bezogen. Ein erstellter Prozess wird sofort aktiviert. Da wir 3 verschiedene Arten von Jobs simulieren, benötigen 
 	wir auch 3 Instanzen dieser Klasse.
 	
@@ -50,13 +50,13 @@
 	$InterruptedQueue$, falls diese nicht leer ist). Der Drucker wird dann auf hold gesetzt (bearbeitet den Job). Jetzt können 2 Situationen eintreten. Im regulären Fall bearbeitet der Drucker den Job komplett,
 	beendet ihn und holt sich den nächsten Job aus der Queue mit der höchsten Priorität. Im zweiten Fall bearbeitet der Drucker den Job nur teilweise und wird dann unterbrochen, da sich ein Job mit
 	höherer Priorität in der $JobQueue$ befindet ($Supervisor$ vergleicht Jobs und aktiviert den Drucker). Er berechnet dann die Restzeit des aktuellen Jobs, weist sie diesem zu und verschiebt ihn in die
-	$InterruptedQueue$. Außerdem wird im Job eine $interruptable$-Flag auf $false$ gesetzt. Dies wurde von uns so definiert, um zu verhindern, dass der gleiche Job immer wieder unterbrochen wird. Weiters
+	$InterruptedQueue$. Außerdem wird im Job eine $interruptable$-Flag auf $false$ gesetzt. Dies wurde so definiert, um zu verhindern, dass der gleiche Job immer wieder unterbrochen wird. Weiters
 	 wird der Drucker auf $interrupted$ gesetzt, was bewirkt, dass er jetzt nicht den Job aus der Queue mit der höchsten Priorität wählt (das wäre ja die $InterruptedQueue$ mit dem soeben unterbrochenen Job),
 	 sondern den neuen Job aus der $JobQueue$ (der der den aktuellen Job unterbrochen hat). Hier können natürlich während der Abarbeitung wieder die gleichen 2 soeben beschriebenen Situationen eintreten.
 	
 	\subsection{Supervisor}
 	Der $Supervisor$ steuert die Unterbrechung von Prozessen, die gerade bearbeitet werden. Eine Instanz dieser Klasse überwacht jeweils einen Drucker und wird immer dann aktiviert, wenn sich ein 
-	neuer $JobProcess$ die $JobQueue$ eines Druckers einordnet. Der Supervisor vergleicht immer die Priorität des aktuellen Jobs im Drucker mit der des neu eingefügten Jobs. Ist die Priorität des neuen Job
+	neuer $JobProcess$ in die $JobQueue$ eines Druckers einordnet. Der Supervisor vergleicht immer die Priorität des aktuellen Jobs im Drucker mit der des neu eingefügten Jobs. Ist die Priorität des neuen Job
 	höher, aktiviert der $Supervisor$ den jeweiligen Drucker (der während der Abarbeitung eines Auftrags auf hold gesetzt ist). Der restliche Unterbrechungsvorgang mitsamt der Verschiebung des aktuellen Jobs
 	in die $InterruptedQueue$ wird vom (dann wieder aktiven) Drucker übernommen. Der $Supervisor$-Prozess wird dann auf passivate gesetzt und wartet darauf, von einem neuen Job reaktiviert zu werden.
 	
@@ -69,17 +69,17 @@
 	
 	\section{Ergebnisse}
 	\subsection{Simulationsparameter}
-	Folgende Simulationsparameter wurden sowohl für den Standardfall (beide Drucker sind während der gesamten Simulationszeit aktiv) als auch für die erweiterte Simulation (Drucker können während der
+	Folgende Simulationsparameter wurden sowohl für den Standardfall (beide Drucker sind während der gesamten Simulationszeit aktiv), als auch für die erweiterte Simulation (Drucker können während der
 	Simulationszeit ausfallen) gewählt.\\
 	\\
 	Für die Erweiterung gelten zusätzlich noch folgende Sachverhalte.\\
 	Im ersten Fall wird ein Drucker nach 100 Minuten und der andere nach 300 Minuten unterbrochen.
-	Im zweiten Fall wird zwei mal der gleiche Drucker unterbrochen. Das erste mal nach 100 Minuten und das zweite mal nach 300 Minuten.\\
+	Im zweiten Fall wird zwei mal der gleiche Drucker unterbrochen. Das erste Mal nach 100 Minuten und das zweite Mal nach 300 Minuten.\\
 	Die Unterbrechungen dauern je 100 Minuten und sollen eine Wartung des Druckers simulieren (z.B. einen erforderlichen Tausch der OPC Trommel eines Tintenstrahldruckers).
 	\\
 	\begin{itemize}
 		\item Simulationsdauer: 10h / 600 min
-		\item Durchgeführte Simulationen: 30
+		\item Durchgeführte Simulationsläufe: 30
 		\item StudJob: Ankunft alle 6-10 min, Bearbeitung: 2-6 min
 		\item ProfJob: Ankunft alle 10-14 min, Bearbeitung: 2-6 min
 		\item SystemJob: Ankunft alle 15-25 min, Bearbeitung: 2-10 min
@@ -89,7 +89,7 @@
 
 	\subsection{Analyse}
 	\begin{tabular}{|l|c|c|c|}
-		\hline  & Ohne Erw. & Erw. Stdandard-Fall & Erw. Extremfall \\
+		\hline  & Ohne Erw. & Erw. Standard-Fall & Erw. Extremfall \\
 		\hline Mittlere WZ Stud 	   & 1,33 & 38,5 & 55 \\ 
 		\hline Mittlere WZ Prof 	   & 0,98 & 3,9 & 4 \\ 
 		\hline Mittlere WZ Sys 		   & 0 & 0,1 & 0,1 \\ 
@@ -106,42 +106,45 @@
 	\end{tabular}
 	\\	
 	\\
-	\subsubsection{Standardfall}
+	\subsubsection{Ohne Erweiterung}
 	Die Ergebnisse der Standard-Simulation (ohne Erweiterung) entsprechen im Großen und Ganzen den Erwartungen. Die mittlere Wartezeit der System-Jobs ist 0, was bedeutet, dass diese sofort an die Reihe 
 	kommen (den aktuellen Job unterbrechen), sobald sie sich in eine Queue eingereiht haben. \\
 	Wie bereits erwähnt, erlaubt die Simulation nur eine Unterbrechung pro Job. Wurde also z.B. ein Stud-Job einmal unterbrochen, so kann dieser kein zweites Mal unterbrochen werden.
 	Die Wartezeiten der Stud-Jobs und Prof-Jobs entsprechen ebenfalls den Erwartungen da diese, entsprechend ihrer Priorität, eine höhere oder niedrigere Wartezeit haben.\\
 	\\
 	Auch die Verteilung der Jobs auf die Drucker ist weitestgehend ausgeglichen.
-	[Jobs reihen sich in die Queue mit der niedrigsten Gesamtbearbeitungszeit ein]\\
+	(Jobs reihen sich in die Queue mit der niedrigsten Gesamtbearbeitungszeit ein)\\
 	\\
 	Etwas unerwartet sind hingegen die maximalen Längen der Warteschlangen beider Drucker. Die Jobs des zweiten Druckers kamen immer an die Reihe sobald sie sich in die Queue einreihten; nur beim
-	ersten Drucker musste ein Job gelegentlich warten. Das bedeutet, dass zwei Drucker vollkommen ausreichen, um die Druckaufträge in einer annehmbaren Zeit abzuarbeiten.\\
+	ersten Drucker musste ein Job gelegentlich warten. Das bedeutet, dass zwei Drucker vollkommen ausreichen, um das simulierte Aufkommen an Druckaufträgen zu bewältigen.\\
 	
 	
 	\subsubsection{Erweiterung: Standardfall}
 	\texttt{(Ein Drucker nach 100, der andere nach 300 min unterbrochen)}
-	 \\ 
-	 \\
-	Hier fällt sofort auf, dass sich die mittlere Wartezeit der Stud-Jobs von 1,33 min (Simulation ohne Erweiterung)  auf 38,5 min erhöht, was einer Steigerung um ca. 2900\% entspricht. Im Gegensatz dazu
-	mussten Prof-Jobs ca. 300\% [0,98 min auf 3,9 min] und Sys-Jobs sogar nur 1\% [0 min auf 0,1 min] länger warten.\\
+	\\ 
 	\\
-	Trotzt der Unterbrechung beider Drucker, ist auch hier die Verteilung der Jobs, mit 96 Jobs abgearbeitet von Drucker 1 und 67 Jobs von Drucker 2, relativ ausgeglichen.\\
+	Hier fällt sofort auf, dass sich die mittlere Wartezeit der Stud-Jobs von 1,33 min (Simulation ohne Erweiterung)  auf 38,5 min erhöht, was einer Steigerung um ca. 2900\% entspricht. Im Gegensatz dazu
+	mussten Prof-Jobs ca. 300\% (0,98 min auf 3,9 min) und Sys-Jobs nur 1\% (0 min auf 0,1 min) länger warten.\\
+	\\
+	Trotzt der Unterbrechung beider Drucker ist auch hier die Verteilung der Jobs mit 96 von Drucker 1  und 67 von Drucker 2 verarbeiteten Jobs relativ ausgeglichen.\\
 	\\
 	Was sich signifikant erhöht hat ist die maximale Anzahl an Jobs in den Warteschlangen. \\
 	Drucker 1: von 1 auf 11\\
 	Drucker 2: von 0 auf 18\\
-	Dies war zu erwarten, da im Wartungsfall alle Jobs in die Warteschlange des funktionsfähigen Druckers eingereiht werden.\\
+	Dies war zu erwarten, da im Wartungsfall alle Jobs in die Warteschlange des funktionsfähigen Druckers verschoben werden.\\
 	\\
-	Das erklärt auch die Verdreifachung der Job Unterbrechungen von 13 auf 36.
+	Dies erklärt auch die ungefähre Verdreifachung der unterbrochenen Jobs von 13 auf 36.
 	
 	\subsubsection{Erweiterung: Extremfall}
-	\texttt{(Zweimalige Unterbrechung des gleichen Druckers. Das erste Mal nach 100 min und das zweite Mal nach 300 min.)}
-	\\ \\
-	Obwohl in diesem Fall zweimal der gleich Drucker ausgefallen ist, haben sich hier die mittleren Wartezeiten von Stud- und Prof-Jobs nicht nennenswert geändert. Lediglich die Stud-Jobs erfuhren eine
-	Zunahme von ca. 40\% [38,5 min auf 55 min] was so nicht zu erwarten war.\\
+	\texttt{(Zweimalige Unterbrechung des gleichen Druckers. Das erste Mal 
+	nach 100 min, das zweite Mal nach 300 min.)}
+	\\ 
 	\\
-	Die Verteilung der Jobs auf die Drucker war auch so zu erwarten, da der erste Drucker ein Drittel der gesamten Simulationszeit inaktiv war (2x 100 min). Dies spiegelt sich auch in den maximalen und
+	Obwohl in diesem Fall zweimal der gleiche Drucker ausgefallen ist, sind die mittleren Wartezeiten von System- und Prof-Jobs nicht nennenswert angestiegen. Wir hätten hier zumindest
+	einen Anstieg der Wartezeit der Prof-Jobs erwartet. Es wurde lediglich eine höhere Wartezeit der Stud-Jobs von ca. 40\% (38,5 min auf 55 min) verzeichnet.
+	\\
+	\\
+	Die Verteilung der Jobs auf die Drucker war so zu erwarten, da der erste Drucker ein Drittel der gesamten Simulationszeit inaktiv war (2x 100 min). Dies spiegelt sich auch in den maximalen und
 	mittleren Längen der Warteschlangen beider Drucker wider.
 	 
 \end{document}
