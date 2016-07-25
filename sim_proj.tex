@@ -18,12 +18,12 @@
 	Es soll ein Szenario simuliert werden, bei dem 2 Farbdrucker mehreren Benutzern zur Verfügung stehen und in gewissen Zeitabständen Print-Jobs mit
 	verschiedenen Prioritäten und Abarbeitungszeiten erstellt werden. Insgesamt gibt es 3 Prioritäten: Student (niedrig), Professor (mittel), System (hoch). Jobs
 	werden in Queues gesammelt und von beiden Druckern abgearbeitet. Dabei ist es immer möglich, dass Jobs mit niedrigerer Priorität während ihrer Bearbeitung in 
-	einem Drucker von Jobs höherer Priorität unterbrochen werden können, sprich Professoren-Jobs unterbrechen Studenten-Jobs, System-Jobs unterbrechen alle 
+	einem Drucker von Jobs höherer Priorität unterbrochen werden, sprich Professoren-Jobs unterbrechen Studenten-Jobs, System-Jobs unterbrechen alle 
 	anderen. Unterbrochene Jobs werden so bald als möglich wieder fortgesetzt.
 	
 	\section{Modell}
 	Um den Sachverhalt aus der Aufgabenstellung simulieren zu können wurde ein Modell bestehend aus 4 Prozessen und einer Model-Klasse erstellt (+ 1 weiterer Prozess für die Erweiterung).
-	Im Folgenden wird kurz auf die Aufgabe eines jeden Prozesses und seinen Beitrag zum Gesamtmodell eingegangen. Hierbei wird auch direkt auf die Erweiterung (Wartung) eingegangen. \\
+	Im Folgenden wird kurz auf die Aufgabe eines jeden Prozesses und seinen Beitrag zum Gesamtmodell eingegangen. Hierbei wird auch direkt die Erweiterung (Wartung) erläutert. \\
 	Als Simulationsdauer wurden 10 Stunden gewählt. Dies soll einen normalen Büro-/Uni- Arbeitstag repräsentieren.
 	
 	\subsection{Allgemein}
@@ -56,27 +56,26 @@
 	
 	\subsection{Supervisor}
 	Der $Supervisor$ steuert die Unterbrechung von Prozessen, die gerade bearbeitet werden. Eine Instanz dieser Klasse überwacht jeweils einen Drucker und wird immer dann aktiviert, wenn sich ein 
-	neuer $JobProcess$ in eine $JobQueue$ einordnet. Der Supervisor vergleicht immer die Priorität des aktuellen Jobs im Drucker mit der des neu eingefügten Jobs. Ist die Priorität des neuen Job höher, aktiviert
-	der $Supervisor$ den jeweiligen Drucker (der während der Abarbeitung eines Auftrags auf hold gesetzt ist). Der restliche Unterbrechungsvorgang mitsamt der Verschiebung des aktuellen Jobs in die
-	$InterruptedQueue$ wird vom (dann wieder aktiven) Drucker übernommen. Der $Supervisor$-Prozess wird dann wieder auf passivate gesetzt und wartet darauf, von einem neuen Job wieder aktiviert zu 
-	werden.
+	neuer $JobProcess$ die $JobQueue$ eines Druckers einordnet. Der Supervisor vergleicht immer die Priorität des aktuellen Jobs im Drucker mit der des neu eingefügten Jobs. Ist die Priorität des neuen Job
+	höher, aktiviert der $Supervisor$ den jeweiligen Drucker (der während der Abarbeitung eines Auftrags auf hold gesetzt ist). Der restliche Unterbrechungsvorgang mitsamt der Verschiebung des aktuellen Jobs
+	in die $InterruptedQueue$ wird vom (dann wieder aktiven) Drucker übernommen. Der $Supervisor$-Prozess wird dann auf passivate gesetzt und wartet darauf, von einem neuen Job reaktiviert zu werden.
 	
 	\subsection{PrinterInkEmptyProcess (Erweiterung)}
 	Dieser Prozess ist Teil unserer Erweiterung. Er wird in unserem Fall 2 mal aktiviert und versetzt dabei einen zufällig gewählten Drucker in den Wartungsmodus, indem er im $PrinterProcess$ ein Flag setzt. 
-	Der Drucker reagiert darauf, indem er alle Aufträge aus seinen Queues in die des anderen Drucker verschiebt. Auch der aktuelle Job wird dem anderen Drucker zugewiesen und neu abgearbeitet. Dies wurde 
-	so gewählt, um sicherzustellen, dass Dokumente an einem einzigen Ort komplett ausgedruckt werden. sämtliche neu ankommenden Jobs reihen sich nun auch direkt in die Queue des anderen Druckers
+	Der Drucker reagiert darauf, indem er alle Aufträge aus seinen Queues in die des anderen Druckers verschiebt. Auch der aktuelle Job wird dem anderen Drucker zugewiesen und neu abgearbeitet. Dies wurde 
+	so gewählt, um sicherzustellen, dass Dokumente an einem einzigen Ort komplett ausgedruckt werden. Sämtliche neu ankommenden Jobs reihen sich nun auch direkt in die Queue des anderen Druckers
 	ein. Ist die Wartung beendet, werden die Aufträge des nicht-gewarteten Druckers nicht wieder aufgeteilt. Die Längen der $JobQueues$ beider Drucker gleichen sich sowieso wieder aus, da sich neue Jobs
 	immer in die kürzere einreihen (bis zum Längenausgleich ist dies die des gewarteten Druckers).
 	
 	\section{Ergebnisse}
 	\subsection{Simulationsparameter}
 	Folgende Simulationsparameter wurden sowohl für den Standardfall (beide Drucker sind während der gesamten Simulationszeit aktiv) als auch für die erweiterte Simulation (Drucker können während der
-	 Simulationszeit ausfallen) angewendet.\\
+	Simulationszeit ausfallen) gewählt.\\
 	\\
-	Für die Erweiterte Simulation gelten noch folgende Werte.\\
-	Im ersten Fall wurde der erste Drucker nach 100 Minuten unterbrochen und dann der zweite nach 300 Minuten.
-	Im zweiten Fall wurde zwei mal der gleiche Drucker unterbrochen. Das erste mal nach 100 Minuten und das zweite mal nach 300 Minuten.\\
-	Die Unterbrechungen dauern je 100 Minuten und sollen einen Ausfall des Druckers simuliere (z.B. einen erforderlichen der OPC Trommel eines Tintenstrahldruckers).
+	Für die Erweiterung gelten zusätzlich noch folgende Sachverhalte.\\
+	Im ersten Fall wird ein Drucker nach 100 Minuten und der andere nach 300 Minuten unterbrochen.
+	Im zweiten Fall wird zwei mal der gleiche Drucker unterbrochen. Das erste mal nach 100 Minuten und das zweite mal nach 300 Minuten.\\
+	Die Unterbrechungen dauern je 100 Minuten und sollen eine Wartung des Druckers simulieren (z.B. einen erforderlichen Tausch der OPC Trommel eines Tintenstrahldruckers).
 	\\
 	\begin{itemize}
 		\item Simulationsdauer: 10h / 600 min
@@ -88,9 +87,9 @@
 	\end{itemize}	
 		
 
-	\subsection{Zusammenfassung}
+	\subsection{Analyse}
 	\begin{tabular}{|l|c|c|c|}
-		\hline  & Ohne Erw. & Erw. Stdandard-Fall & Erw. Extremfall \\ 
+		\hline  & Ohne Erw. & Erw. Stdandard-Fall & Erw. Extremfall \\
 		\hline Mittlere WZ Stud 	   & 1,33 & 38,5 & 55 \\ 
 		\hline Mittlere WZ Prof 	   & 0,98 & 3,9 & 4 \\ 
 		\hline Mittlere WZ Sys 		   & 0 & 0,1 & 0,1 \\ 
@@ -107,41 +106,42 @@
 	\end{tabular}
 	\\	
 	\\
-	\subsubsection{Analyse: Standardfall}
-	Die Ergebnisse der Standard-Simulation (ohne Erweiterung) entsprechen den zuvor getroffenen Annahmen. Die mittlere Wartezeit der System-Jobs ist 0 was bedeutet, dass diese sofort an die Reihe
-	 (Unterbrechung des aktuell bearbeitenden Jobs) kamen sobald sie sich in eine Queue eingereiht hatten. \\
-	Wie bereits erwähnt erlaubt die Simulation nur eine einzige Unterbrechung ein und desselben Jobs. Wurde also z.B. ein Stud-Job einmal unterbrochen, so kann dieser kein zweites mal unterbrochen werden.
-	Die Wartezeiten der Stud-Jobs und Prof-Jobs entsprechen ebenfalls den Erwartungen da diese, entsprechend ihrer Priorität, eine höhere oder niedrigere WZ haben.\\
+	\subsubsection{Standardfall}
+	Die Ergebnisse der Standard-Simulation (ohne Erweiterung) entsprechen im Großen und Ganzen den Erwartungen. Die mittlere Wartezeit der System-Jobs ist 0, was bedeutet, dass diese sofort an die Reihe 
+	kommen (den aktuellen Job unterbrechen), sobald sie sich in eine Queue eingereiht haben. \\
+	Wie bereits erwähnt, erlaubt die Simulation nur eine Unterbrechung pro Job. Wurde also z.B. ein Stud-Job einmal unterbrochen, so kann dieser kein zweites Mal unterbrochen werden.
+	Die Wartezeiten der Stud-Jobs und Prof-Jobs entsprechen ebenfalls den Erwartungen da diese, entsprechend ihrer Priorität, eine höhere oder niedrigere Wartezeit haben.\\
 	\\
 	Auch die Verteilung der Jobs auf die Drucker ist weitestgehend ausgeglichen.
-	[Jobs reihen sich in jene WS ein, dessen Summe aller vorhanden Jobs am kleinsten ist]\\
+	[Jobs reihen sich in die Queue mit der niedrigsten Gesamtbearbeitungszeit ein]\\
 	\\
-	Etwas unerwartet sind hingegen die max. Längen der Warteschlangen beider Drucker. Die Jobs des zweiten Druckers kamen immer an die Reihe sobald diese sich in die WS eingereiht hatten und nur beim ersten Drucker musste ein Job gelegentlich warten. Das bedeutet, dass zwei Drucker vollkommen ausreichen um die Druckaufträge in einer annehmbaren Zeit abzuarbeiten.\\
+	Etwas unerwartet sind hingegen die maximalen Längen der Warteschlangen beider Drucker. Die Jobs des zweiten Druckers kamen immer an die Reihe sobald sie sich in die Queue einreihten; nur beim
+	ersten Drucker musste ein Job gelegentlich warten. Das bedeutet, dass zwei Drucker vollkommen ausreichen, um die Druckaufträge in einer annehmbaren Zeit abzuarbeiten.\\
 	
 	
-	\subsubsection{Analyse: Erweiterung Standardfall}
-	\texttt{(Unterbrechung des ersten Drucker nach 100 min und der zweite Drucker nach 300 min.)}
-	   \\ \\
-	Hier fällt sofort auf, dass sich die mittlere WZ der Stud-Jobs von 1,33 min (Simulation ohne Erweiterung)  auf 38,5 min erhöht hat was einer Erhöhung von ca. 2900\% entspricht. Im Gegensatz dazu
-	 mussten Prof-Jobs ca. 300\% 
-	[0,98 min auf 3,9 min] und Sys-Jobs sogar nur 1\% [0 min auf 0,1 min] länger warten.\\
+	\subsubsection{Erweiterung: Standardfall}
+	\texttt{(Ein Drucker nach 100, der andere nach 300 min unterbrochen)}
+	 \\ 
+	 \\
+	Hier fällt sofort auf, dass sich die mittlere Wartezeit der Stud-Jobs von 1,33 min (Simulation ohne Erweiterung)  auf 38,5 min erhöht, was einer Steigerung um ca. 2900\% entspricht. Im Gegensatz dazu
+	mussten Prof-Jobs ca. 300\% [0,98 min auf 3,9 min] und Sys-Jobs sogar nur 1\% [0 min auf 0,1 min] länger warten.\\
 	\\
 	Trotzt der Unterbrechung beider Drucker, ist auch hier die Verteilung der Jobs, mit 96 Jobs abgearbeitet von Drucker 1 und 67 Jobs von Drucker 2, relativ ausgeglichen.\\
 	\\
 	Was sich signifikant erhöht hat ist die maximale Anzahl an Jobs in den Warteschlangen. \\
 	Drucker 1: von 1 auf 11\\
 	Drucker 2: von 0 auf 18\\
-	Dies war zu erwarten bei einem Ausfall, alle Jobs in die WS des funktionsfähigen Druckers eingereiht werden.\\
+	Dies war zu erwarten, da im Wartungsfall alle Jobs in die Warteschlange des funktionsfähigen Druckers eingereiht werden.\\
 	\\
 	Das erklärt auch die Verdreifachung der Job Unterbrechungen von 13 auf 36.
 	
-	\subsubsection{Analyse: Erweiterung Extremfall}
-	\texttt{(Zweimalige Unterbrechung des gleichen Druckers. Das erste mal nach 100 min und das zweite mal nach 300 min.)}
+	\subsubsection{Erweiterung: Extremfall}
+	\texttt{(Zweimalige Unterbrechung des gleichen Druckers. Das erste Mal nach 100 min und das zweite Mal nach 300 min.)}
 	\\ \\
-	Obwohl in diesem Fall zwei mal der gleich Drucker ausgefallen ist, haben sich hier die mittleren WZ der Jobs nicht nennenswert geändert. Lediglich die Stud-Job erfuhren eine Zunahme von ca. 140\%
-	 [38,5 min auf 55 min] was so nicht zu erwarten war.\\
+	Obwohl in diesem Fall zweimal der gleich Drucker ausgefallen ist, haben sich hier die mittleren Wartezeiten von Stud- und Prof-Jobs nicht nennenswert geändert. Lediglich die Stud-Jobs erfuhren eine
+	Zunahme von ca. 40\% [38,5 min auf 55 min] was so nicht zu erwarten war.\\
 	\\
-	Die Verteilung der Jobs auf die Drucker ist auch so zu erwarten gewesen da Drucker 1 einen drittel der gesamten Simulationszeit ausgefallen ist (2x 100 min). Dies spiegelt sich auch in den maximalen und
-	 mittleren WS Längen beider Drucker wieder.
+	Die Verteilung der Jobs auf die Drucker war auch so zu erwarten, da der erste Drucker ein Drittel der gesamten Simulationszeit inaktiv war (2x 100 min). Dies spiegelt sich auch in den maximalen und
+	mittleren Längen der Warteschlangen beider Drucker wider.
 	 
 \end{document}
